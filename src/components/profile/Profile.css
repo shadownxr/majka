@@ -1,0 +1,13 @@
+.Profile {
+    background-color: blue;
+    position: relative;
+    flex: 1;
+    display: flex;
+    height: 75px;
+    min-width: 12%;
+}
+
+img {
+    max-width: 128px ;
+    max-height: 128px ;
+}
