@@ -2,7 +2,9 @@ import React from 'react';
 import './Profile.css';
 import ProfileData from './ProfileData'
 import Button from '@material-ui/core/Button';
-import logo from 'C:/Users/shadownxr/Documents/Interfejs/majkar/src/logo.svg';
+// import logo from 'C:/Users/shadownxr/Documents/Interfejs/majkar/src/logo.svg';
+
+const logo = null;
 
 class Profile extends React.Component {
     constructor(){

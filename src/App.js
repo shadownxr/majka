@@ -6,17 +6,29 @@ import CarMenu from './components/carmenu/CarMenu';
 import Content from './components/content/Content';
 import DaneTechniczne from './components/mainmenu/DaneTechniczne';
 
+const carsData  = [
+  {carId: 1, brand: "Porsche", model:"911", technicalities: {engine: {type: "benzynowy", power: "385KM"}, size: {width: 1852, length: 4519}}},
+  {carId: 2, brand: "Porsche", model:"Carrera GT", technicalities: {engine: {type: "benzynowy", power: "612KM"}, size: {width: 1921, length: 4613}}},
+  {carId: 3, brand: "Ford", model:"Mustang V8",
+    technicalities: {
+      engine: {
+        type: "benzynowy", power: "580KM"
+      },
+      size: {
+        width: 1921,
+        length: 4613
+      }
+    }
+  }
+];
+
 class App extends React.Component {
   constructor(){
     super()
     this.state = {
         //isLoading: true,
         userId: 1,
-        carId: 1,
-        cars: [
-          {carId: 1,brand: "Porsche", model:"911", technicalities: {engine: {type: "benzynowy", power: "385KM"}, size: {width: 1852, length: 4519}}},
-          {carId: 2,brand: "Porsche", model:"Carrera GT", technicalities: {engine: {type: "benzynowy", power: "612KM"}, size: {width: 1921, length: 4613}}}
-        ],
+        activeCarId: 1,
         currentScreen: null,
     }
   }
@@ -27,7 +39,17 @@ class App extends React.Component {
               isLoading: false
           })
       },1500)*/
-      this.setState({currentScreen: <DaneTechniczne carId = {this.state.carId} carsData = {this.state.cars}/>})
+      this.setState({
+        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
+      })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.activeCarId !== this.state.activeCarId) {
+      this.setState({
+        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
+      })
+    }
   }
 
   mainMenuCallback = (mainMenuData) => {
@@ -38,17 +60,18 @@ class App extends React.Component {
     this.setState({currentScreen: profileData})
   }
 
-  carMenuCallback = (carMenuData) => {
-    this.setState({carId: carMenuData})
+  handleCarClick = (activeCarId) => {
+    this.setState({activeCarId: activeCarId})
   }
 
   render(){
     return (
       <div className="App">
-          <MainMenu parentCallback = {this.mainMenuCallback} carId = {this.state.carId} carsData = {this.state.cars} />
+          { /* Nie nazywaj propsow parentCallback bo to nic nie mowi */ }
+          <MainMenu parentCallback = {this.mainMenuCallback} carData={carsData[this.state.activeCarId-1]} />
           <Content currentScreen = {this.state.currentScreen} />
-          <Profile username="admin" image="C:\Users\shadownxr\Documents\Interfejs\majkar\src\logo.svg" parrentCallback = {this.profileCallback} />
-          <CarMenu parentCallback = {this.carMenuCallback} carsData = {this.state.cars}/>
+          <Profile username="admin" image={null/*"C:\Users\shadownxr\Documents\Interfejs\majkar\src\logo.svg"*/} parrentCallback = {this.profileCallback} />
+          <CarMenu onCarClick = {this.handleCarClick} carsData = {carsData}/>
       </div>
     )
   }

@@ -6,37 +6,16 @@ import Spalanie from './Spalanie';
 import DaneTechniczne from './DaneTechniczne';
 
 class MainMenu extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            carId: this.props.carId,
-            carsData: this.props.carsData,
-        }
-      }
-
     onSerwisyClicked = () => {
-        this.setState({carId: this.props.carId})
-        this.props.parentCallback(<Serwisy carId = {this.state.carId}/>)
+        this.props.parentCallback(<Serwisy carData={this.props.carData} />)
     }
     
     onSpalanieClicked = () => {
-        this.setState({carId: this.props.carId})
-        this.props.parentCallback(<Spalanie carId = {this.state.carId}/>)
+        this.props.parentCallback(<Spalanie carData={this.props.carData} />)
     }
     
     onDaneTechniczneClicked = () => {
-        this.setState({carId: this.props.carId})
-        this.props.parentCallback(<DaneTechniczne carId = {this.state.carId} carsData = {this.state.carsData}/>)
-    }
-
-    componentDidMount(){
-        //console.log(this.state)
-    }
-
-    componentDidUpdate(prevProps){
-        if(prevProps.carId !== this.state.carId){
-            this.setState({carId: this.props.carId},() => {console.log(this.state)})
-        }
+        this.props.parentCallback(<DaneTechniczne carData = {this.props.carData} />)
     }
 
     render(){

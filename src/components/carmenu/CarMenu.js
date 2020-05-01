@@ -9,8 +9,8 @@ class CarMenu extends React.Component {
     render(){
         const carButtons = this.props.carsData.map((car, i) => 
             <Car className = "Car" key = {i}>
-                <CarIconButton onClick = {() => {this.props.parentCallback(car.carId)}}>
-                    <div className="CarName">CarName {car.carId}</div>
+                <CarIconButton onClick = {() => {this.props.onCarClick(car.carId)}}>
+                    <div className="CarName">{car.brand} {car.model}</div>
                     <div className="CarIcon"><CarIcon style={{width:'50px',height:'50px'}}/></div>
                 </CarIconButton>
             </Car>
