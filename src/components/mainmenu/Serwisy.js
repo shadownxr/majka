@@ -10,7 +10,6 @@ class Serwisy extends React.Component {
     }
 
     render(){
-        console.log(this.props)
         if(this.props.carId === 1) {
             return(
                 <div className="Serwisy">

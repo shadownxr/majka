@@ -10,20 +10,24 @@ class App extends React.Component {
   constructor(){
     super()
     this.state = {
-        isLoading: true,
+        //isLoading: true,
         userId: 1,
         carId: 1,
-        currentScreen: <DaneTechniczne />
+        cars: [
+          {carId: 1,brand: "Porsche", model:"911", technicalities: {engine: {type: "benzynowy", power: "385KM"}, size: {width: 1852, length: 4519}}},
+          {carId: 2,brand: "Porsche", model:"Carrera GT", technicalities: {engine: {type: "benzynowy", power: "612KM"}, size: {width: 1921, length: 4613}}}
+        ],
+        currentScreen: null,
     }
-
   }
 
   componentDidMount(){
-      setTimeout(()=>{
+      /*setTimeout(()=>{
           this.setState({
               isLoading: false
           })
-      },1500)
+      },1500)*/
+      this.setState({currentScreen: <DaneTechniczne carId = {this.state.carId} carsData = {this.state.cars}/>})
   }
 
   mainMenuCallback = (mainMenuData) => {
@@ -38,14 +42,13 @@ class App extends React.Component {
     this.setState({carId: carMenuData})
   }
 
-
   render(){
     return (
       <div className="App">
-          <MainMenu parentCallback = {this.mainMenuCallback} carId = {this.state.carId}/>
+          <MainMenu parentCallback = {this.mainMenuCallback} carId = {this.state.carId} carsData = {this.state.cars} />
           <Content currentScreen = {this.state.currentScreen} />
-          <Profile username="admin" image="C:\Users\shadownxr\Documents\Interfejs\majkar\src\logo.svg" parentCallback = {this.profileCallback} />
-          <CarMenu parentCallback = {this.carMenuCallback}/>
+          <Profile username="admin" image="C:\Users\shadownxr\Documents\Interfejs\majkar\src\logo.svg" parrentCallback = {this.profileCallback} />
+          <CarMenu parentCallback = {this.carMenuCallback} carsData = {this.state.cars}/>
       </div>
     )
   }
