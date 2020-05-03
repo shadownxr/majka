@@ -5,6 +5,7 @@ const CarIconButton = styled(Button)({
   color: 'black',
   maxWidth: '200px',
   maxHeight: '50px',
+  padding: '0px 0px 0px 0px',
 });
 
 

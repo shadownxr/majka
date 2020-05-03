@@ -2,16 +2,15 @@ import React from 'react';
 import './CarMenu.css';
 import Car from './Car';
 import CarIconButton from './CarIconButton';
-import CarIcon from '@material-ui/icons/DriveEta';
-import AddButton from './AddButton' 
+import AddButton from './AddButton';
 
 class CarMenu extends React.Component {
     render(){
         const carButtons = this.props.carsData.map((car, i) => 
             <Car className = "Car" key = {i}>
                 <CarIconButton onClick = {() => {this.props.onCarClick(car.carId)}}>
-                    <div className="CarName">{car.brand} {car.model}</div>
-                    <div className="CarIcon"><CarIcon style={{width:'50px',height:'50px'}}/></div>
+                    <div className="CarName">{car.model}</div>
+                    <div className="CarIcon"><img src={require(`${car.caricon}`)} alt="Not Found" style={{width: "50px", height: "50px"}}/></div>
                 </CarIconButton>
             </Car>
         )
@@ -22,7 +21,7 @@ class CarMenu extends React.Component {
                     Logo
                 </div>
                 {carButtons}
-                <div>
+                <div className="AddButtonContainer">
                     <AddButton />
                 </div>
             </div>

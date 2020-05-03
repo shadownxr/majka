@@ -7,18 +7,56 @@ import Content from './components/content/Content';
 import DaneTechniczne from './components/mainmenu/DaneTechniczne';
 
 const carsData  = [
-  {carId: 1, brand: "Porsche", model:"911", technicalities: {engine: {type: "benzynowy", power: "385KM"}, size: {width: 1852, length: 4519}}},
-  {carId: 2, brand: "Porsche", model:"Carrera GT", technicalities: {engine: {type: "benzynowy", power: "612KM"}, size: {width: 1921, length: 4613}}},
-  {carId: 3, brand: "Ford", model:"Mustang V8",
+  {carId: 1, brand: "Porsche", model:"911 (992)", caricon:"./caricons/porsche-3-logo-svg-vector.svg", 
+  technicalities: {
+    engine: {
+      type: "benzynowy", power: "385KM"
+    }, 
+    size: {
+      width: 1852, length: 4519
+    }
+  },
+  services: 
+    [{
+      date: "2020-04-23 18:25:43",title:"Wymiana oleju"
+    },
+    {
+      date: "2020-04-27 18:25:43",title:"Wymiana lamp"
+    }]
+},
+  {carId: 2, brand: "Porsche", model:"Carrera GT", caricon:"./caricons/porsche-3-logo-svg-vector.svg",
     technicalities: {
       engine: {
-        type: "benzynowy", power: "580KM"
+        type: "benzynowy", power: "612KM"}, 
+        size: {
+          width: 1921, length: 4613
+        }
+      },
+    services: 
+      [{
+        date: "2020-04-23 18:25:43",title:"Wymiana paska"
+      },
+      {
+        date: "2020-05-22 18:25:43",title:"Wymiana lamp"
+      }]
+    },
+  {carId: 3, brand: "Ford", model:"Mustang VI", caricon:"./caricons/ford-icon.svg",
+    technicalities: {
+      engine: {
+        type: "benzynowy", power: "450KM"
       },
       size: {
-        width: 1921,
-        length: 4613
+        width: 1916,
+        length: 4784
       }
-    }
+    },
+    services: 
+      [{
+        date: "2020-02-27 18:25:43",title:"Przegląd"
+      },
+      {
+        date: "2020-05-01 18:25:43",title:"Wymiana lamp"
+      }]
   }
 ];
 
@@ -67,10 +105,9 @@ class App extends React.Component {
   render(){
     return (
       <div className="App">
-          { /* Nie nazywaj propsow parentCallback bo to nic nie mowi */ }
-          <MainMenu parentCallback = {this.mainMenuCallback} carData={carsData[this.state.activeCarId-1]} />
+          <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={carsData[this.state.activeCarId-1]} />
           <Content currentScreen = {this.state.currentScreen} />
-          <Profile username="admin" image={null/*"C:\Users\shadownxr\Documents\Interfejs\majkar\src\logo.svg"*/} parrentCallback = {this.profileCallback} />
+          <Profile username="admin" image={null} profileChoiceCallback = {this.profileCallback} />
           <CarMenu onCarClick = {this.handleCarClick} carsData = {carsData}/>
       </div>
     )
