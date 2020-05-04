@@ -13,7 +13,6 @@ class Serwisy extends React.Component {
     render(){
         const serviceList = this.props.carData.services.map((service,i) => 
             <div key={i} className = "serviceList">
-                <table>
                     <tbody>
                         <tr>
                             <td>Data: </td><td>{service.date}</td>
@@ -22,14 +21,15 @@ class Serwisy extends React.Component {
                             <td>Tytuł: </td><td>{service.title} </td>
                         </tr>
                     </tbody>
-                </table>
             </div>
         )
 
         return(
             <div className="Serwisy">
                 Ostatnie Serwisy
-                {serviceList}
+                <table>
+                    {serviceList}
+                </table>
             </div>
         )
     }
