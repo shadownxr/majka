@@ -2,7 +2,6 @@ import React from 'react';
 import './Profile.css';
 import ProfileData from './ProfileData'
 import Button from '@material-ui/core/Button';
-import logo from 'C:/Users/shadownxr/Documents/Interfejs/majkar/src/logo.svg';
 
 class Profile extends React.Component {
     constructor(){
@@ -12,15 +11,14 @@ class Profile extends React.Component {
     }
 
     onProfileClicked(){
-        this.props.parrentCallback(<ProfileData />);
+        this.props.profileChoiceCallback(<ProfileData />);
     }
 
     render(){
-        console.log(this.props);
         return(
             <div className="Profile">
-                <div style={{flex:1}}>
-                    <img src={logo} alt="Not found"/>
+                <div style={{flex:1}} className="imgContainer">
+                    <img src={require('./motorcycle-helmet.svg')} alt="Not found"/>
                 </div>
                 <div style={{flex:2}}>
                     {this.props.username}

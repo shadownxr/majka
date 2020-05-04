@@ -1,5 +1,5 @@
 .CarMenu {
-    background-color: brown;
+    background-color: red;
     position: fixed;
     width: 50px;
 }
@@ -18,6 +18,8 @@
     width: 150px;
     height: 50px;
     align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
 .CarButton {
@@ -25,4 +27,13 @@
     width: 50px;
     height: 50px;
     align-items: center;
+}
+
+.CarIcon {
+    width: 50px;
+    height: 50px;
+}
+
+.AddButtonContainer{
+    padding: 0px 0px 0px 0px
 }
