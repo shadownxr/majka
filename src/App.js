@@ -18,13 +18,23 @@ const carsData  = [
   },
   services: 
     [{
-      date: "2020-04-23 18:25:43",title:"Wymiana oleju"
+      date: new Date("April 23, 2020 18:25:43"),title:"Wymiana oleju"
     },
     {
-      date: "2020-04-27 18:25:43",title:"Wymiana lamp"
+      date: new Date("April 27, 2020 18:25:43"),title:"Wymiana lamp"
+    }],
+  mileage:
+    [{
+      date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+    },
+    {
+      date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+    },
+    {
+      date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
     }]
 },
-  {carId: 2, brand: "Porsche", model:"Carrera GT", caricon:"./caricons/porsche-3-logo-svg-vector.svg",
+{carId: 2, brand: "Porsche", model:"Carrera GT", caricon:"./caricons/porsche-3-logo-svg-vector.svg",
     technicalities: {
       engine: {
         type: "benzynowy", power: "612KM"}, 
@@ -34,12 +44,22 @@ const carsData  = [
       },
     services: 
       [{
-        date: "2020-04-23 18:25:43",title:"Wymiana paska"
+        date: new Date("April 23, 2020 18:25:43"),title:"Wymiana paska"
       },
       {
-        date: "2020-05-22 18:25:43",title:"Wymiana lamp"
+        date: new Date("May 22, 2020 18:25:43"),title:"Wymiana lamp"
+      }],
+    mileage:
+      [{
+        date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+      },
+      {
+        date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+      },
+      {
+        date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
       }]
-    },
+  },
   {carId: 3, brand: "Ford", model:"Mustang VI", caricon:"./caricons/ford-icon.svg",
     technicalities: {
       engine: {
@@ -52,10 +72,20 @@ const carsData  = [
     },
     services: 
       [{
-        date: "2020-02-27 18:25:43",title:"Przegląd"
+        date: new Date("January 27, 2020 18:25:43"),title:"Przegląd"
       },
       {
-        date: "2020-05-01 18:25:43",title:"Wymiana lamp"
+        date: new Date("May 1, 2020 18:25:43"),title:"Wymiana lamp"
+      }],
+    mileage:
+      [{
+        date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+      },
+      {
+        date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+      },
+      {
+        date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
       }]
   }
 ];

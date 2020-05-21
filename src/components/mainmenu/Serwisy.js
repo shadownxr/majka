@@ -1,7 +1,7 @@
 import React from 'react';
 import './Serwisy.css';
-import Button from '@material-ui/core/Button'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import AddButton from './AddButtonSerwisy';
+import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,6 +9,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import EditButton from './EditButton';
+import Button from '@material-ui/core/Button';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -28,12 +30,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-const useStyles = makeStyles({
-    table: {
-      minWidth: 650,
-    },
-});
-
 class Serwisy extends React.Component {
     constructor(){
         super()
@@ -42,56 +38,51 @@ class Serwisy extends React.Component {
         }
     }
 
-
     render(){
         const serviceList = this.props.carData.services.map((service,i) =>
-        <TableBody> 
-            <StyledTableRow key={i} className = "serviceList">
-                <TableCell>{service.date}</TableCell>
-                <TableCell align="right">{service.title}</TableCell>
-            </StyledTableRow>
-        </TableBody>
+        <StyledTableRow key={i} className = "serviceList">
+            <StyledTableCell>{new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric',year: 'numeric', month: 'numeric', day: 'numeric'}).format(service.date)}</StyledTableCell>
+            <StyledTableCell align="right">{service.title}</StyledTableCell>
+            <StyledTableCell align="center"><EditButton/></StyledTableCell>
+        </StyledTableRow>
         )
 
         return(
-            <TableContainer className="Serwisy">
-                <Table className={useStyles().table} aria-label="simple table">
+            <TableContainer className="Serwisy" component={Paper}>
+                <Table className="SerwisyTable" aria-label="simple table">
                 <TableHead>
                     <StyledTableRow>
-                        <StyledTableCell align="center" colSpan={2}>Ostatnie serwisy</StyledTableCell>
+                        <StyledTableCell align="center" colSpan={3}>Zaplanowane serwisy</StyledTableCell>
                     </StyledTableRow>
                 </TableHead>
+                <TableBody>
+                    <StyledTableRow>
+                            <StyledTableCell>Data</StyledTableCell>
+                            <StyledTableCell align="right">Tytuł</StyledTableCell>
+                            <StyledTableCell align="center"><AddButton/></StyledTableCell>
+                    </StyledTableRow>
+
+                </TableBody>
+                <TableHead>
+                    <StyledTableRow>
+                        <StyledTableCell align="center" colSpan={3}>Ostatnie serwisy</StyledTableCell>
+                    </StyledTableRow>
+                </TableHead>
+                <TableBody>
+                    <StyledTableRow>
+                        <StyledTableCell>Data</StyledTableCell>
+                        <StyledTableCell align="right">Tytuł</StyledTableCell>
+                        <StyledTableCell align="center"><AddButton/></StyledTableCell>
+                    </StyledTableRow>
                     {serviceList}
+                    <StyledTableRow>
+                        <StyledTableCell align="center" colSpan={3}><Button>Historia serwisów</Button></StyledTableCell>
+                    </StyledTableRow>
+                </TableBody>
                 </Table>
             </TableContainer>
         )
     }
 }
-
-/*
-const serviceList = this.props.carData.services.map((service,i) => 
-            <div key={i} className = "serviceList">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Data: </td><td>{service.date}</td>
-                        </tr>
-                        <tr>
-                            <td>Tytuł: </td><td>{service.title} </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        )
-
-        return(
-            <div className="Serwisy">
-                <table>
-                    <thead><tr><td>Ostatnie Serwisy <Button>Dodaj</Button></td></tr></thead>
-                    {serviceList}
-                </table>
-            </div>
-        )
-*/
 
 export default Serwisy
