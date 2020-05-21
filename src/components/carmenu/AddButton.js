@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Add from '@material-ui/icons/Add';
@@ -20,10 +20,10 @@ const MyButton = styled(Button)({
 
 
 export default function AddButton(){
-  const [open, setOpen] = React.useState(false);
-  const [carBrand, setCarBrand] = React.useState(0);
-  const [carModel, setCarModel] = React.useState(0);
-  const [carEngine, setCarEngine] = React.useState(0);
+  const [open, setOpen] = useState(false);
+  const [carBrand, setCarBrand] = useState(0);
+  const [carModel, setCarModel] = useState(0);
+  const [carEngine, setCarEngine] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,8 +32,6 @@ export default function AddButton(){
   const handleClose = () => {
     setOpen(false);
   };
-  
-  console.log(carBrand+" "+carModel);
 
   return (
   <div>
@@ -47,7 +45,6 @@ export default function AddButton(){
             <Autocomplete
               id="brand-box"
               disableClearable
-              value={carBrand}
               onChange={(event,newBrand)=>{setCarBrand(newBrand.id)}}
               options={cars}
               getOptionLabel={(option) => option.label}
@@ -57,9 +54,8 @@ export default function AddButton(){
             <Autocomplete
               id="model-box"
               disableClearable
-              value={carModel}
               onChange={(event,newModel)=>{setCarModel(newModel.id)}}
-              options={cars[carBrand].model}
+              options={cars[carBrand] ? cars[carBrand].model : []}
               getOptionLabel={(option) =>  option.label}
               style={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
@@ -67,9 +63,8 @@ export default function AddButton(){
             <Autocomplete
               id="engine-box"
               disableClearable
-              value={carEngine}
-              onChange={(event,newEngine)=>{setCarModel(newEngine.id)}}
-              options={cars[carBrand].model[carModel].engine}
+              onChange={(event,newEngine)=>{setCarEngine(newEngine.id)}}
+              options={(cars[carBrand] && cars[carBrand].model[carModel]) ? cars[carBrand].model[carModel].engine : []}
               getOptionLabel={(option) => option.label}
               style={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Silnik" variant="outlined" />}
@@ -91,24 +86,24 @@ export default function AddButton(){
 const cars = [{
   id: 0, label: "Porsche", model: [{
     id: 0, label: "911 (992)", engine: [{
-      id: 0, label: 1,
+      id: 0, label: "1"
     },{
-      id: 1, label: 2,
+      id: 1, label: "2"
     }]
   },{
     id: 1, label: "Carrera GT", engine: [{
-      id: 0, label: 1,
+      id: 0, label: "1"
     },{
-      id: 1, label: 2,
+      id: 1, label: "2"
     }]
   }]
 },
 {
   id: 1, label: "Ford", model: [{
     id: 0, label: "Mustang", engine: [{
-      id: 0, label: 1,
+      id: 0, label: "1"
     },{
-      id: 1, label: 2,
+      id: 1, label: "2"
     }]
   }]
 }]
