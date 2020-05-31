@@ -1,10 +1,7 @@
 import React from 'react';
 import './App.css';
-import MainMenu from './components/mainmenu/MainMenu';
-import Profile from './components/profile/Profile';
-import CarMenu from './components/carmenu/CarMenu';
-import Content from './components/content/Content';
-import DaneTechniczne from './components/mainmenu/DaneTechniczne';
+import SignPage from './SignPage';
+import MainPage from './MainPage';
 
 const carsData  = [
   {carId: 1, brand: "Porsche", model:"911 (992)", caricon:"./caricons/porsche-3-logo-svg-vector.svg", 
@@ -90,6 +87,15 @@ const carsData  = [
   }
 ];
 
+const account = {
+  id: 1,
+  login: "admin",
+  password: "asdf",
+  name: "Admin",
+  surename: "Adminowsky",
+  email: "AAdminowsky@gmail.com",
+}
+
 class App extends React.Component {
   constructor(){
     super()
@@ -98,49 +104,28 @@ class App extends React.Component {
         userId: 1,
         activeCarId: 1,
         currentScreen: null,
+        loginPage: true,
     }
   }
 
-  componentDidMount(){
-      /*setTimeout(()=>{
-          this.setState({
-              isLoading: false
-          })
-      },1500)*/
-      this.setState({
-        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
-      })
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.activeCarId !== this.state.activeCarId) {
-      this.setState({
-        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
-      })
-    }
-  }
-
-  mainMenuCallback = (mainMenuData) => {
-    this.setState({currentScreen: mainMenuData})
-  }
-
-  profileCallback = (profileData) => {
-    this.setState({currentScreen: profileData})
-  }
-
-  handleCarClick = (activeCarId) => {
-    this.setState({activeCarId: activeCarId})
+  handleChangeScreen = (screen) => {
+    this.setState({loginPage: screen});
   }
 
   render(){
-    return (
-      <div className="App">
-          <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={carsData[this.state.activeCarId-1]} />
-          <Content currentScreen = {this.state.currentScreen} />
-          <Profile username="admin" image={null} profileChoiceCallback = {this.profileCallback} />
-          <CarMenu onCarClick = {this.handleCarClick} carsData = {carsData}/>
-      </div>
-    )
+    if(this.state.loginPage === false){
+      return (
+        <div className="App">
+          <MainPage carData={carsData} account={account}/>
+        </div>
+      )
+    } else if(this.state.loginPage === true){
+      return (
+        <div className="App">
+          <SignPage changeScreen={this.handleChangeScreen}/>
+        </div>
+      );
+    }
   }
 }
 

@@ -6,12 +6,11 @@ import Button from '@material-ui/core/Button';
 class Profile extends React.Component {
     constructor(){
         super()
-
         this.onProfileClicked = this.onProfileClicked.bind(this);
     }
 
     onProfileClicked(){
-        this.props.profileChoiceCallback(<ProfileData />);
+        this.props.profileChoiceCallback(<ProfileData accountData = {this.props.accountData}/>);
     }
 
     render(){
@@ -21,7 +20,7 @@ class Profile extends React.Component {
                     <img src={require('./motorcycle-helmet.svg')} alt="Not found"/>
                 </div>
                 <div style={{flex:2}}>
-                    {this.props.username}
+                    {this.props.accountData.name+" "+this.props.accountData.surename}
                     <Button onClick = {this.onProfileClicked}>Profile</Button>
                     <Button>Logout</Button>
                 </div>

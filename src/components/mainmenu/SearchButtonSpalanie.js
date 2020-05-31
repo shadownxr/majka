@@ -1,7 +1,7 @@
+import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Add from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
 const MyButton = styled(Button)({
-  color: 'black',
+  color: 'white',
   width: '35px',
   height: '35px',
   minWidth: '35px',
@@ -18,7 +18,7 @@ const MyButton = styled(Button)({
 });
 
 
-export default function AddButton(){
+export default function SearchButton(){
     const [open, setOpen] = React.useState(false);
     const [date, setDate] = React.useState('');
 
@@ -32,16 +32,16 @@ export default function AddButton(){
 
     return (
       <div>
-      <MyButton color="primary" onClick={handleClickOpen}><Add style={{height:'35px',width:'35px'}}/></MyButton>
+      <MyButton color="primary" onClick={handleClickOpen}><SearchIcon style={{height:'35px',width:'35px'}}/></MyButton>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Dodaj Serwis</DialogTitle>
+        <DialogTitle id="form-dialog-title">Szukaj</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Podaj date i tytuł
+            Podaj date
           </DialogContentText>
           <TextField
               id="date"
-              label="Data"
+              label="Od"
               type="date"
               value={date}
               onChange={(event, newDate) => {
@@ -53,12 +53,17 @@ export default function AddButton(){
               }}
           />
           <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Tytuł"
-            type="text"
-            fullWidth
+              id="date"
+              label="Do"
+              type="date"
+              value={date}
+              onChange={(event, newDate) => {
+                setDate(newDate);
+                console.log(date);
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
           />
         </DialogContent>
         <DialogActions>
@@ -66,7 +71,7 @@ export default function AddButton(){
             Anuluj
           </Button>
           <Button onClick={handleClose} color="primary">
-            Dodaj
+            Szukaj
           </Button>
         </DialogActions>
       </Dialog>

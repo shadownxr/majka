@@ -21,9 +21,9 @@ const MyButton = styled(Button)({
 
 export default function AddButton(){
   const [open, setOpen] = useState(false);
-  const [carBrand, setCarBrand] = useState(0);
-  const [carModel, setCarModel] = useState(0);
-  const [carEngine, setCarEngine] = useState(0);
+  const [carBrand, setCarBrand] = useState(" ");
+  const [carModel, setCarModel] = useState(" ");
+  const [carEngine, setCarEngine] = useState(" ");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,7 +35,7 @@ export default function AddButton(){
 
   return (
   <div>
-    <MyButton variant="outlined" color="primary" onClick={handleClickOpen}><Add style={{height:'50px',width:'50px'}}/></MyButton>
+    <MyButton color="primary" onClick={handleClickOpen}><Add style={{height:'50px',width:'50px'}}/></MyButton>
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
           <DialogContent>
@@ -45,28 +45,28 @@ export default function AddButton(){
             <Autocomplete
               id="brand-box"
               disableClearable
-              onChange={(event,newBrand)=>{setCarBrand(newBrand.id)}}
+              onChange={(event,newBrand)=>{setCarBrand(newBrand.label)}}
               options={cars}
               getOptionLabel={(option) => option.label}
-              style={{ width: 300 }}
+              style={{ width: 300 , margin: "5px"}}
               renderInput={(params) => <TextField {...params} label="Marka" variant="outlined" />}
             />
             <Autocomplete
               id="model-box"
               disableClearable
-              onChange={(event,newModel)=>{setCarModel(newModel.id)}}
-              options={cars[carBrand] ? cars[carBrand].model : []}
+              onChange={(event,newModel)=>{setCarModel(newModel.label)}}
+              options={carBrand?(model.filter(car => car.id === carBrand)):[]}
               getOptionLabel={(option) =>  option.label}
-              style={{ width: 300 }}
+              style={{ width: 300 , margin: "5px"}}
               renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
             />
             <Autocomplete
               id="engine-box"
               disableClearable
-              onChange={(event,newEngine)=>{setCarEngine(newEngine.id)}}
-              options={(cars[carBrand] && cars[carBrand].model[carModel]) ? cars[carBrand].model[carModel].engine : []}
+              onChange={(event,newEngine)=>{setCarEngine(newEngine.label)}}
+              options={(carBrand && carModel)?(engine.filter(car => car.id === carModel)):[]}
               getOptionLabel={(option) => option.label}
-              style={{ width: 300 }}
+              style={{ width: 300 , margin: "5px"}}
               renderInput={(params) => <TextField {...params} label="Silnik" variant="outlined" />}
             />
           </DialogContent>
@@ -84,26 +84,25 @@ export default function AddButton(){
 }
 
 const cars = [{
-  id: 0, label: "Porsche", model: [{
-    id: 0, label: "911 (992)", engine: [{
-      id: 0, label: "1"
-    },{
-      id: 1, label: "2"
-    }]
-  },{
-    id: 1, label: "Carrera GT", engine: [{
-      id: 0, label: "1"
-    },{
-      id: 1, label: "2"
-    }]
-  }]
-},
-{
-  id: 1, label: "Ford", model: [{
-    id: 0, label: "Mustang", engine: [{
-      id: 0, label: "1"
-    },{
-      id: 1, label: "2"
-    }]
-  }]
+  label: "Porsche",
+},{
+  label: "Ford",
+}]
+
+const model = [{
+  id: "Porsche", label: "911 (992)",
+},{
+  id: "Porsche", label: "Carrera GT",
+},{
+  id: "Ford", label: "Mustang",
+}]
+
+const engine = [{
+  id: "911 (992)", label: "Porsche 1"
+},{
+  id: "Carrera GT", label: "Porsche 2"
+},{
+  id: "Mustang", label: "Mustang 1"
+},{
+  id: "Mustang", label: "Mustang 2"
 }]
