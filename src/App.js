@@ -122,7 +122,7 @@ class App extends React.Component {
     } else if(this.state.loginPage === true){
       return (
         <div className="App">
-          <SignPage changeScreen={this.handleChangeScreen}/>
+          <SignPage loginCallback={this.handleChangeScreen}/>
         </div>
       );
     }

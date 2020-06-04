@@ -37,7 +37,7 @@ export default function AddButton(){
   <div>
     <MyButton color="primary" onClick={handleClickOpen}><Add style={{height:'50px',width:'50px'}}/></MyButton>
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="form-dialog-title">Dodaj samochód</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Dodaj nowy samochód

@@ -39,6 +39,10 @@ export default function SignUp(props) {
     props.signCallback(1);
   };
 
+  const handleSignIn = () => {
+    props.signCallback(1);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -110,6 +114,7 @@ export default function SignUp(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSignIn}
           >
             Sign Up
           </Button>

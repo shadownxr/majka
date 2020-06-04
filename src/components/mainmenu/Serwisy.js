@@ -113,11 +113,6 @@ class Serwisy extends React.Component {
                     </TableHead>
                     <TableBody>
                         <StyledTableRow>
-                                <StyledTableCell>Data</StyledTableCell>
-                                <StyledTableCell align="right">Tytuł</StyledTableCell>
-                                <StyledTableCell align="center"><AddButton/></StyledTableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
                             <StyledTableCell>Data</StyledTableCell>
                             <StyledTableCell align="right">Tytuł</StyledTableCell>
                             <StyledTableCell align="center"><AddButton/></StyledTableCell>
