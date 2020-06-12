@@ -1,10 +1,7 @@
 import React from 'react';
 import './App.css';
-import MainMenu from './components/mainmenu/MainMenu';
-import Profile from './components/profile/Profile';
-import CarMenu from './components/carmenu/CarMenu';
-import Content from './components/content/Content';
-import DaneTechniczne from './components/mainmenu/DaneTechniczne';
+import SignPage from './SignPage';
+import MainPage from './MainPage';
 
 const carsData  = [
   {carId: 1, brand: "Porsche", model:"911 (992)", caricon:"./caricons/porsche-3-logo-svg-vector.svg", 
@@ -18,13 +15,23 @@ const carsData  = [
   },
   services: 
     [{
-      date: "2020-04-23 18:25:43",title:"Wymiana oleju"
+      date: new Date("April 23, 2020 18:25:43"),title:"Wymiana oleju"
     },
     {
-      date: "2020-04-27 18:25:43",title:"Wymiana lamp"
+      date: new Date("April 27, 2020 18:25:43"),title:"Wymiana lamp"
+    }],
+  mileage:
+    [{
+      date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+    },
+    {
+      date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+    },
+    {
+      date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
     }]
 },
-  {carId: 2, brand: "Porsche", model:"Carrera GT", caricon:"./caricons/porsche-3-logo-svg-vector.svg",
+{carId: 2, brand: "Porsche", model:"Carrera GT", caricon:"./caricons/porsche-3-logo-svg-vector.svg",
     technicalities: {
       engine: {
         type: "benzynowy", power: "612KM"}, 
@@ -34,12 +41,22 @@ const carsData  = [
       },
     services: 
       [{
-        date: "2020-04-23 18:25:43",title:"Wymiana paska"
+        date: new Date("April 23, 2020 18:25:43"),title:"Wymiana paska"
       },
       {
-        date: "2020-05-22 18:25:43",title:"Wymiana lamp"
+        date: new Date("May 22, 2020 18:25:43"),title:"Wymiana lamp"
+      }],
+    mileage:
+      [{
+        date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+      },
+      {
+        date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+      },
+      {
+        date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
       }]
-    },
+  },
   {carId: 3, brand: "Ford", model:"Mustang VI", caricon:"./caricons/ford-icon.svg",
     technicalities: {
       engine: {
@@ -52,13 +69,32 @@ const carsData  = [
     },
     services: 
       [{
-        date: "2020-02-27 18:25:43",title:"Przegląd"
+        date: new Date("January 27, 2020 18:25:43"),title:"Przegląd"
       },
       {
-        date: "2020-05-01 18:25:43",title:"Wymiana lamp"
+        date: new Date("May 1, 2020 18:25:43"),title:"Wymiana lamp"
+      }],
+    mileage:
+      [{
+        date: new Date("April 23, 2020 18:25:43"),value:"100",unitF:"L",distance:"300",unitD:"KM"
+      },
+      {
+        date: new Date("April 27, 2020 18:25:43"),value:"50",unitF:"L",distance:"100",unitD:"KM"
+      },
+      {
+        date: new Date("April 30, 2020 18:25:43"),value:"70",unitF:"L",distance:"200",unitD:"KM"
       }]
   }
 ];
+
+const account = {
+  id: 1,
+  login: "admin",
+  password: "asdf",
+  name: "Admin",
+  surename: "Adminowsky",
+  email: "AAdminowsky@gmail.com",
+}
 
 class App extends React.Component {
   constructor(){
@@ -68,49 +104,28 @@ class App extends React.Component {
         userId: 1,
         activeCarId: 1,
         currentScreen: null,
+        loginPage: true,
     }
   }
 
-  componentDidMount(){
-      /*setTimeout(()=>{
-          this.setState({
-              isLoading: false
-          })
-      },1500)*/
-      this.setState({
-        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
-      })
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.activeCarId !== this.state.activeCarId) {
-      this.setState({
-        currentScreen: <DaneTechniczne carData={carsData[this.state.activeCarId-1]} />
-      })
-    }
-  }
-
-  mainMenuCallback = (mainMenuData) => {
-    this.setState({currentScreen: mainMenuData})
-  }
-
-  profileCallback = (profileData) => {
-    this.setState({currentScreen: profileData})
-  }
-
-  handleCarClick = (activeCarId) => {
-    this.setState({activeCarId: activeCarId})
+  handleChangeScreen = (screen) => {
+    this.setState({loginPage: screen});
   }
 
   render(){
-    return (
-      <div className="App">
-          <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={carsData[this.state.activeCarId-1]} />
-          <Content currentScreen = {this.state.currentScreen} />
-          <Profile username="admin" image={null} profileChoiceCallback = {this.profileCallback} />
-          <CarMenu onCarClick = {this.handleCarClick} carsData = {carsData}/>
-      </div>
-    )
+    if(this.state.loginPage === false){
+      return (
+        <div className="App">
+          <MainPage carData={carsData} account={account}/>
+        </div>
+      )
+    } else if(this.state.loginPage === true){
+      return (
+        <div className="App">
+          <SignPage loginCallback={this.handleChangeScreen}/>
+        </div>
+      );
+    }
   }
 }
 

@@ -16,4 +16,5 @@
     background-image: url("bgimg.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
+    flex-direction: column;
 }

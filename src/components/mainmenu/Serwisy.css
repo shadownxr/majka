@@ -9,7 +9,6 @@
   align-content: center;
 }
 
-table {
-  border: 1px solid black;
-  background-color: white;
+.SerwisyTable{
+  min-width: 650px;
 }

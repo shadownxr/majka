@@ -1,17 +1,17 @@
 import React from 'react';
 import './Profile.css';
 import ProfileData from './ProfileData'
-import Button from '@material-ui/core/Button';
+import MyButton from './MyButton';
+import Box from '@material-ui/core/Box';
 
 class Profile extends React.Component {
     constructor(){
         super()
-
         this.onProfileClicked = this.onProfileClicked.bind(this);
     }
 
     onProfileClicked(){
-        this.props.profileChoiceCallback(<ProfileData />);
+        this.props.profileChoiceCallback(<ProfileData accountData = {this.props.accountData}/>);
     }
 
     render(){
@@ -21,9 +21,11 @@ class Profile extends React.Component {
                     <img src={require('./motorcycle-helmet.svg')} alt="Not found"/>
                 </div>
                 <div style={{flex:2}}>
-                    {this.props.username}
-                    <Button onClick = {this.onProfileClicked}>Profile</Button>
-                    <Button>Logout</Button>
+                    <Box component="div" display="inline" width="100%" alignItems="center" justifyContent="center">
+                        {this.props.accountData.name+" "+this.props.accountData.surename}
+                        <MyButton onClick = {this.onProfileClicked} width="auto">Profile</MyButton>
+                        <MyButton width="auto">Logout</MyButton>
+                    </Box>
                 </div>
             </div>
         )
