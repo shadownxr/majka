@@ -15,6 +15,8 @@ class CarMenu extends React.Component {
             </Car>
         )
 
+        //`${car.caricon}`
+
         return(
             <div className="CarMenu">
                 <div className="Logo">

@@ -14,6 +14,10 @@ export default function SignPage(props){
         props.loginCallback(screen);
     }
 
+    const dataCallbackHandle = (data) => {
+        props.dataCallback(data);
+    }
+
     /*useEffect((signCallback) => {
         setCurrentScreen(signCallback);
     })*/
@@ -21,7 +25,7 @@ export default function SignPage(props){
     if(currentScreen === 1){
         return(
             <Container component="main" maxWidth="xs">
-                <SignIn signCallback = {signScreenCallbackHandle} changeScreen = {loginButtonHandle}/>
+                <SignIn signCallback = {signScreenCallbackHandle} changeScreen = {loginButtonHandle} data = {dataCallbackHandle} />
             </Container>
         )
     } else if(currentScreen === 2){

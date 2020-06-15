@@ -39,8 +39,27 @@ export default function SignUp(props) {
     props.signCallback(1);
   };
 
-  const handleSignIn = () => {
-    props.signCallback(1);
+  const handleSignUp = (login,password) => {
+    const options = {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'same-origin',
+      header: {'Content-Type': 'application/json'},
+      body: JSON.stringify({'login' : login, 'password' : password}),
+    };
+
+    const url = 'http://localhost:8000/accounts/signup';
+
+    fetch(url, options )
+    .then(response => response.json())
+    .then(result => {
+      if(result.message === "Wrong login or password."){
+        console.log("false");
+      } else {
+        console.log("true");
+        props.signCallback(1);
+      }
+    })
   };
 
   return (
@@ -114,7 +133,7 @@ export default function SignUp(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSignIn}
+            onClick={() => handleSignUp()}
           >
             Sign Up
           </Button>

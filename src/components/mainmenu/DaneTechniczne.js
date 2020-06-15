@@ -46,13 +46,13 @@ const DaneTechniczne = ({ carData }) => (
               <StyledTableCell component="th" scope="row">
               Typ:
               </StyledTableCell>
-              <StyledTableCell align="right">{carData.technicalities.engine.type}</StyledTableCell>   
+              <StyledTableCell align="right">{carData.engineType}</StyledTableCell>   
             </StyledTableRow>
             <StyledTableRow>
               <StyledTableCell component="th" scope="row">
               Moc:
               </StyledTableCell>
-              <StyledTableCell align="right">{carData.technicalities.engine.power}</StyledTableCell>   
+              <StyledTableCell align="right">{carData.enginePower}</StyledTableCell>   
             </StyledTableRow>
         </TableBody>
         <TableHead>
@@ -65,13 +65,13 @@ const DaneTechniczne = ({ carData }) => (
               <StyledTableCell component="th" scope="row">
               Długość:
               </StyledTableCell>
-              <StyledTableCell align="right">{carData.technicalities.size.length}</StyledTableCell>   
+              <StyledTableCell align="right">{carData.sizeLength}</StyledTableCell>   
             </StyledTableRow>
             <StyledTableRow>
               <StyledTableCell component="th" scope="row">
               Szerokość:
               </StyledTableCell>
-              <StyledTableCell align="right">{carData.technicalities.size.width}</StyledTableCell>   
+              <StyledTableCell align="right">{carData.sizeWidth}</StyledTableCell>   
             </StyledTableRow>
         </TableBody>
       </Table>
