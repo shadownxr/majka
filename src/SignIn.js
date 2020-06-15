@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -35,13 +35,56 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn(props) {
   const classes = useStyles();
 
+  const [data, setData] = useState("");
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState("");
+
   const handleSignUpLink = () => {
     props.signCallback(2);
   };
 
+  const handleLogin = (event) => {
+    setLogin(event.target.value);
+  }
+
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  }
+
   const handleSignInButton = () => {
-    props.changeScreen(false);
+    fetchAccount();
   };
+
+  const fetchAccount = () => {
+    let details = {
+      'login': login,
+      'password': password
+    };
+
+    const options = {
+      method: 'POST',
+      /*mode: 'cors',
+      credentials: 'same-origin',*/
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(details),
+    };
+
+    const url = 'http://localhost:8000/accounts/signin';
+
+    fetch(url, options)
+    .then(response => response.json())
+    .then(result => {
+      if(result.found === false){
+        console.log("Wrong login or password.");
+      } else {
+        setData(result);
+        setUserId(result.data.id);
+        props.data(result.data);
+        props.changeScreen(false);
+      }
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,11 +102,11 @@ export default function SignIn(props) {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            label="Login"
+            name="login"
+            autoComplete="login"
             autoFocus
+            onChange = {handleLogin}
           />
           <TextField
             variant="outlined"
@@ -73,20 +116,19 @@ export default function SignIn(props) {
             name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
+            onChange = {handlePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSignInButton}
+            onClick={() => handleSignInButton()}
           >
             Sign In
           </Button>
@@ -97,7 +139,7 @@ export default function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2" onClick = {handleSignUpLink}>
+              <Link href="#" variant="body2" onClick = {() => handleSignUpLink}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
