@@ -32,13 +32,48 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 class Serwisy extends React.Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             isLoading: true,
-            archive: false
+            archive: false,
+            services: [{date: "Cos",title:"cos"}],
+            account: this.props.account,
+            services: this.props.carData
         }
     }
+
+    fetchServices(){
+        let details = {
+            'userId': this.props.account.id,
+            'carId': this.props.carData.id
+          };
+      
+          const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(details),
+          };
+      
+          const url = 'http://localhost:8000/services';
+      
+          fetch(url, options)
+          .then(response => response.json())
+          .then(result => {
+            console.log(result);
+            this.setState({services: result});
+          });
+    }
+
+    componentDidMount(){
+        this.fetchServices();
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        if(this.state.carData !== prevState.carData){
+          this.fetchServices();
+        }
+      }
 
     onServiceArchiveClicked = () => {
         this.setState({archive: true})
@@ -49,20 +84,24 @@ class Serwisy extends React.Component {
     }
 
     render(){
-        const serviceList = this.props.carData.services.map((service,i) =>
+        /*const archiveServiceList = this.state.services.map((service,i) =>
         <StyledTableRow key={i} className = "serviceList">
             <StyledTableCell>{new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric',year: 'numeric', month: 'numeric', day: 'numeric'}).format(service.date)}</StyledTableCell>
             <StyledTableCell align="right">{service.title}</StyledTableCell>
             <StyledTableCell align="center"><EditButton/></StyledTableCell>
         </StyledTableRow>
-        )
+        )*/
 
-        const archiveServiceList = this.props.carData.services.map((service,i) =>
-        <StyledTableRow key={i} className = "serviceList">
-            <StyledTableCell>{new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric',year: 'numeric', month: 'numeric', day: 'numeric'}).format(service.date)}</StyledTableCell>
-            <StyledTableCell align="right">{service.title}</StyledTableCell>
-            <StyledTableCell align="center"><EditButton/></StyledTableCell>
-        </StyledTableRow>
+        var data = Array.from(this.state.services);
+        console.log(data);
+        const serviceList = data.map((service,i) => {
+            return (
+            <StyledTableRow key={i} className = "serviceList">
+                <StyledTableCell>{(new Date(service.date)).toString()}</StyledTableCell>
+                <StyledTableCell align="right">{service.title}</StyledTableCell>
+                <StyledTableCell align="center"><EditButton/></StyledTableCell>
+            </StyledTableRow>
+            )}
         )
 
         if(this.state.archive === false){
@@ -117,7 +156,7 @@ class Serwisy extends React.Component {
                             <StyledTableCell align="right">Tytuł</StyledTableCell>
                             <StyledTableCell align="center"><AddButton/></StyledTableCell>
                         </StyledTableRow>
-                        {archiveServiceList}
+                        {/*archiveServiceList*/}
                         <StyledTableRow>
                             <StyledTableCell align="center" colSpan={3}><Button onClick = {this.onBackClicked}>Powrót</Button></StyledTableCell>
                         </StyledTableRow>

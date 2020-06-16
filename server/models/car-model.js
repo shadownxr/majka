@@ -36,7 +36,7 @@ Car.getCarsByUserId = ( id, result) => {
 };
 
 Car.addCarToUser = ( userId, carId, result) => {
-    connection.query("INSERT INTO accountscars (userId,carId) VALUES ?", [userId,carId] ,(err,res) => {
+    connection.query("INSERT INTO accountscars SET ?", {userId: userId,carId: carId} ,(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);

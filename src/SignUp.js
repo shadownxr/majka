@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -35,31 +35,52 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp(props) {
   const classes = useStyles();
 
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSignInLink = () => {
     props.signCallback(1);
   };
 
-  const handleSignUp = (login,password) => {
+  const handleLogin = (event) => {
+    setLogin(event.target.value);
+  }
+
+  const handleName = (event) => {
+    setName(event.target.value);
+  }
+
+  const handleEmail = (event) => {
+    setEmail(event.target.value);
+  }
+
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  }
+
+  const handleSignUp = () => {
+    let details = {
+      'login': login,
+      'password' : password,
+      'name' : name,
+      'email' : email
+    };
+
     const options = {
       method: 'POST',
-      mode: 'cors',
-      credentials: 'same-origin',
-      header: {'Content-Type': 'application/json'},
-      body: JSON.stringify({'login' : login, 'password' : password}),
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(details),
     };
 
     const url = 'http://localhost:8000/accounts/signup';
 
-    fetch(url, options )
+    fetch(url, options)
     .then(response => response.json())
-    .then(result => {
-      if(result.message === "Wrong login or password."){
-        console.log("false");
-      } else {
-        console.log("true");
-        props.signCallback(1);
-      }
-    })
+    .then(result => {   
+          props.signCallback(1);
+    });
   };
 
   return (
@@ -77,12 +98,13 @@ export default function SignUp(props) {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="login"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="login"
+                label="login"
+                onChange = {handleLogin}
                 autoFocus
               />
             </Grid>
@@ -91,10 +113,11 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                id="name"
+                label="name"
+                name="name"
+                autoComplete="name"
+                onChange = {handleName}
               />
             </Grid>
             <Grid item xs={12}>
@@ -106,6 +129,7 @@ export default function SignUp(props) {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange = {handleEmail}
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,6 +142,7 @@ export default function SignUp(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange = {handlePassword}
               />
             </Grid>
             <Grid item xs={12}>
@@ -128,7 +153,6 @@ export default function SignUp(props) {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"

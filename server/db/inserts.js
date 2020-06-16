@@ -7,7 +7,7 @@ var con = mysql.createConnection({
   database: "majka"
 });
 
-var insertCars = "INSERT INTO cars (brand,model,engineType,enginePower,sizeWidth,sizeLength) VALUES ?";
+var insertCars = "INSERT INTO cars (brand,model,engineType,enginePower,sizeWidth,sizeLength,caricon) VALUES ?";
 var valuesCars = [
     ['Porsche','911 (992)','benzynowy','385KM',1852,4519,'./caricons/porsche-3-logo-svg-vector.svg'],
     ['Porsche','Carrera GT','benzynowy','612KM',1921,4613,'./caricons/porsche-3-logo-svg-vector.svg'],
@@ -19,25 +19,25 @@ var valuesAccounts =[['admin','asdf','Admin','AAdminowsky@gmail.com']];
 
 var insertServices = "INSERT INTO services (date,title) VALUES ?";
 var valuesServices = [
-    ['2020-04-23 18:25:43','Wymiana oleju'],
-    ['2020-04-27 18:25:43','Wymiana lamp'],
-    ['2020-04-23 18:25:43','Wymiana paska'],
-    ['2020-05-22 18:25:43','Wymiana lamp'],
-    ['2020-01-27 18:25:43','Przegląd'],
-    ['2020-05-01 18:25:43','Wymiana oleju']
+    ['2020-04-23','Wymiana oleju'],
+    ['2020-04-27','Wymiana lamp'],
+    ['2020-04-23','Wymiana paska'],
+    ['2020-05-22','Wymiana lamp'],
+    ['2020-01-27','Przegląd'],
+    ['2020-05-01','Wymiana oleju']
 ];
 
 var insertMileage = "INSERT INTO mileage (date,value,distance) VALUES ?";
 var valuesMileage = [
-    ['2020-04-21 18:25:43','100','300'],
-    ['2020-04-23 18:25:43','50','100'],
-    ['2020-04-27 18:25:43','70','200'],
-    ['2020-04-23 18:25:43','100','300'],
-    ['2020-04-24 18:25:43','50','100'],
-    ['2020-04-27 18:25:43','70','200'],
-    ['2020-04-23 18:25:43','100','300'],
-    ['2020-04-27 18:25:43','100','300'],
-    ['2020-04-30 18:25:43','50','100']
+    ['2020-04-21','100','300'],
+    ['2020-04-23','50','100'],
+    ['2020-04-27','70','200'],
+    ['2020-04-23','100','300'],
+    ['2020-04-24','50','100'],
+    ['2020-04-27','70','200'],
+    ['2020-04-23','100','300'],
+    ['2020-04-27','100','300'],
+    ['2020-04-30','50','100']
 ];
 
 var accountsCars = "INSERT INTO accountscars (userId,carId) VALUES ?";
@@ -70,6 +70,8 @@ var valuesAccountsService = [
     [1,3,6]
 ];
 
+var trigger1 = "create trigger add_dummy_car AFTER INSERT ON accounts FOR EACH ROW INSERT INTO accountscars SET userId = New.id, carId = 1";
+
 con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
@@ -100,5 +102,9 @@ con.connect(function(err) {
     con.query(accountsService, [valuesAccountsService], function (err, result) {
         if (err) throw err;
         console.log("Number of records AccountsService inserted: " + result.affectedRows);
+    });
+    con.query(trigger1, function (err, result) {
+        if (err) throw err;
+        console.log("Trigger 1 created");
     });
 });

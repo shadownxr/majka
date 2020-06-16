@@ -4,7 +4,7 @@ import SignUp from './SignUp';
 import Container from '@material-ui/core/Container';
 
 export default function SignPage(props){
-    const [currentScreen,setCurrentScreen] = useState(1);
+    const [currentScreen,setCurrentScreen] = useState(2);
     
     const signScreenCallbackHandle = (screen) => {
         setCurrentScreen(screen);

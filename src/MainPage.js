@@ -45,13 +45,17 @@ class MainPage extends React.Component {
       this.setState({activeCarId: activeCarId})
     }
   
+    refreshCallbackHandle = (refresh) => {
+      this.props.refreshCallback(refresh);
+    }
+
     render(){
         return (
           <div className="MainPage">
-              <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={this.state.carsData[this.state.activeCarId-1]} />
+              <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={this.state.carsData[this.state.activeCarId-1]} account={this.state.account}/>
               <Content currentScreen = {this.state.currentScreen} />
               <Profile accountData = {this.state.account} image={null} profileChoiceCallback = {this.profileCallback} />
-              <CarMenu onCarClick = {this.handleCarClick} carsData = {this.state.carsData}/>
+              <CarMenu onCarClick = {this.handleCarClick} carsData = {this.state.carsData} account={this.state.account} refreshCallback = {this.refreshCallbackHandle}/>
           </div>
         )
     }

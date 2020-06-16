@@ -139,7 +139,7 @@ export default function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2" onClick = {() => handleSignUpLink}>
+              <Link href="#" variant="body2" onClick = {handleSignUpLink}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

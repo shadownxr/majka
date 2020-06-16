@@ -26,7 +26,7 @@ Services.getServicesById = ( userId, carId, result) => {
         }
 
         if (res.length) {
-            console.log("Cars found:",res);
+            console.log("Services:",res);
             result(null, res);
             return;
         }
@@ -49,7 +49,7 @@ Services.addService = (newService, result) => {
 }
 
 Services.getLastId = result => {
-    connection.query("SELECT LAST_INSERT_ID()",(err,res) => {
+    connection.query("SELECT LAST_INSERT_ID() AS id",(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);

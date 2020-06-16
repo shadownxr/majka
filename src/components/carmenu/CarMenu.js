@@ -5,6 +5,17 @@ import CarIconButton from './CarIconButton';
 import AddButton from './AddButton';
 
 class CarMenu extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            account: this.props.account,
+        }
+      }
+
+    refreshCallbackHandle = (refresh) => {
+        this.props.refreshCallback(refresh);
+    }
+
     render(){
         const carButtons = this.props.carsData.map((car, i) => 
             <Car className = "Car" key = {i}>
@@ -24,7 +35,7 @@ class CarMenu extends React.Component {
                 </div>
                 {carButtons}
                 <div className="AddButtonContainer">
-                    <AddButton />
+                    <AddButton account={this.state.account} refreshCallback={this.refreshCallbackHandle}/>
                 </div>
             </div>
         )

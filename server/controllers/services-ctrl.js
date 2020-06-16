@@ -7,7 +7,7 @@ exports.getServices = (req, res) => {
         });
     }
 
-    Services.getServicesById( req.body.id, (err, data) => {
+    Services.getServicesById( req.body.userId, req.body.carId, (err, data) => {
       if (err)
         res.status(500).send({
           message:
