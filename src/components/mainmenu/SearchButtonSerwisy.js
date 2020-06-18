@@ -18,17 +18,90 @@ const MyButton = styled(Button)({
 });
 
 
-export default function SearchButton(){
+export default function SearchButton(props){
     const [open, setOpen] = React.useState(false);
     const [date, setDate] = React.useState('');
+    const [from, setFrom] = React.useState('');
+    const [to, setTo] = React.useState('');
+    const [title, setTitle] = React.useState('');
+    const [err, setErr] = React.useState('');
 
     const handleClickOpen = () => {
       setOpen(true);
     };
 
     const handleClose = () => {
+      setErr("");
       setOpen(false);
     };
+
+    const handleFrom = (event) => {
+      setFrom(event.target.value);
+    };
+
+    const handleTo = (event) => {
+      setTo(event.target.value);
+    };
+
+    const handleTitle = (event) => {
+      setTitle(event.target.value);
+    };
+
+    const handleSearchC = () => {
+      props.searchCallback({to:to, from:from, title:title, search: true});
+      setOpen(false);
+    }
+
+    const handleSearch = () => {
+      let fromDate;
+      let toDate;
+      console.log(from);
+      console.log(to);
+      console.log(title);
+
+      if((((from === '')||( from === null))) && ((title === '') || (title === null)) && ((to === '') || (to === null))){
+        setErr("Wybierz datę od do której będzie szukany wpis");
+        //props.searchResultCallback({data:[],search:false});
+        return;
+      }
+
+      if((((from === '')||( from !== null))) && ((title !== '') || (title !== null)) && ((to === '') ||(to === null))){
+        fromDate = '';
+        toDate = '';
+      } else if((((from !== '')||( from !== null))) && ((title === '') || (title === null)) && ((to !== '') ||(to !== null))){
+          fromDate = new Date(from);
+          toDate = new Date(to);
+      } else {
+          setErr("Wybierz datę od do lub tytuł której będzie szukany wpis");
+          //props.searchResultCallback({data:[],search:false});
+          return;
+      }
+
+      let details = {
+          'userId': props.account.id,
+          'carId': props.carData.acId,
+          'dateFrom': fromDate,
+          'dateTo': toDate,
+          'title': title
+          };
+      
+          const options = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(details),
+          };
+      
+          const url = 'http://localhost:8000/services/search';
+      
+          fetch(url, options)
+              .then(response => response.json())
+              .then(result => {
+                console.log(result);
+                setErr("");
+                props.searchResultCallback({data:result,search:true});
+                setOpen(false);
+          })
+      }
 
     return (
       <div>
@@ -37,17 +110,15 @@ export default function SearchButton(){
         <DialogTitle id="form-dialog-title">Szukaj</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Podaj date i tytuł
+            Podaj date i tytuł<br/>
+            {err}
           </DialogContentText>
           <TextField
               id="date"
               label="Od"
               type="date"
-              value={date}
-              onChange={(event, newDate) => {
-                setDate(newDate);
-                console.log(date);
-              }}
+              value={from}
+              onChange={handleFrom}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -56,11 +127,8 @@ export default function SearchButton(){
               id="date"
               label="Do"
               type="date"
-              value={date}
-              onChange={(event, newDate) => {
-                setDate(newDate);
-                console.log(date);
-              }}
+              value={to}
+              onChange={handleTo}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -71,6 +139,7 @@ export default function SearchButton(){
             id="name"
             label="Tytuł"
             type="text"
+            onChange={handleTitle}
             fullWidth
           />
         </DialogContent>
@@ -78,7 +147,7 @@ export default function SearchButton(){
           <Button onClick={handleClose} color="primary">
             Anuluj
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleSearch} color="primary">
             Szukaj
           </Button>
         </DialogActions>

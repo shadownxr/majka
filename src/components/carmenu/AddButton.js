@@ -19,11 +19,33 @@ const MyButton = styled(Button)({
 });
 
 
-export default function AddButton(){
+export default function AddButton(props){
   const [open, setOpen] = useState(false);
   const [carBrand, setCarBrand] = useState(" ");
   const [carModel, setCarModel] = useState(" ");
-  const [carEngine, setCarEngine] = useState(" ");
+  const [carId, setCarId] = useState(0);
+
+  const addCarToUser = () => {
+    let details = {
+      'userId': props.account.id,
+      'carId': carId
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(details),
+    };
+
+    const url = 'http://localhost:8000/cars';
+
+    fetch(url, options)
+    .then(response => response.json())
+    .then(result => {
+      //console.log(result);
+        props.refreshCallback(true);
+    });
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,6 +53,16 @@ export default function AddButton(){
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAdd = () => {
+    if((carBrand === "Porsche") && (carModel === "911 (992)")) setCarId(1);
+    if((carBrand === "Porsche") && (carModel === "Carrera GT")) setCarId(2);
+    if((carBrand === "Ford") && (carModel === "Mustang VII")) setCarId(3);
+    if(carId !== 0){
+      addCarToUser();
+      setOpen(false);
+    }
   };
 
   return (
@@ -60,21 +92,12 @@ export default function AddButton(){
               style={{ width: 300 , margin: "5px"}}
               renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
             />
-            <Autocomplete
-              id="engine-box"
-              disableClearable
-              onChange={(event,newEngine)=>{setCarEngine(newEngine.label)}}
-              options={(carBrand && carModel)?(engine.filter(car => car.id === carModel)):[]}
-              getOptionLabel={(option) => option.label}
-              style={{ width: 300 , margin: "5px"}}
-              renderInput={(params) => <TextField {...params} label="Silnik" variant="outlined" />}
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Anuluj
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleAdd} color="primary">
               Dodaj
             </Button>
           </DialogActions>
@@ -94,15 +117,5 @@ const model = [{
 },{
   id: "Porsche", label: "Carrera GT",
 },{
-  id: "Ford", label: "Mustang",
-}]
-
-const engine = [{
-  id: "911 (992)", label: "Porsche 1"
-},{
-  id: "Carrera GT", label: "Porsche 2"
-},{
-  id: "Mustang", label: "Mustang 1"
-},{
-  id: "Mustang", label: "Mustang 2"
+  id: "Ford", label: "Mustang VII",
 }]

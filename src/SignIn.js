@@ -119,10 +119,6 @@ export default function SignIn(props) {
             autoComplete="current-password"
             onChange = {handlePassword}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             fullWidth
             variant="contained"
@@ -133,13 +129,8 @@ export default function SignIn(props) {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="#" variant="body2" onClick = {() => handleSignUpLink}>
+              <Link href="#" variant="body2" onClick = {handleSignUpLink}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

@@ -7,13 +7,13 @@ var con = mysql.createConnection({
   database: "majka"
 });
 
-var accounts = "CREATE TABLE accounts ( id INT AUTO_INCREMENT PRIMARY KEY, login VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)";
-var cars = "CREATE TABLE cars ( id INT AUTO_INCREMENT PRIMARY KEY, brand VARCHAR(255) NOT NULL, model VARCHAR(255) NOT NULL, engineType VARCHAR(255) NOT NULL,enginePower VARCHAR(255) NOT NULL,sizeWidth INT NOT NULL,sizeLength INT NOT NULL, caricon VARCHAR(255) NOT NULL)";
-var services = "CREATE TABLE services ( serviceId INT AUTO_INCREMENT PRIMARY KEY, date DATETIME NOT NULL, title VARCHAR(255) NOT NULL)";
-var mileage = "CREATE TABLE mileage ( mileageId INT PRIMARY KEY AUTO_INCREMENT, date DATETIME NOT NULL, value INT NOT NULL, distance INT NOT NULL)";
-var accounts_cars = "CREATE TABLE accountsCars ( id INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), carId INT NOT NULL, FOREIGN KEY (carId) REFERENCES cars(id))";
-var accounts_mileage = "CREATE TABLE accountsMileage ( id INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), carId INT NOT NULL, FOREIGN KEY (carId) REFERENCES cars(id), mileageId INT NOT NULL, FOREIGN KEY (mileageId) REFERENCES mileage(mileageId))";
-var accounts_services = "CREATE TABLE accountsService ( id INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), carId INT NOT NULL, FOREIGN KEY (carId) REFERENCES cars(id), serviceId INT NOT NULL, FOREIGN KEY (serviceId) REFERENCES services(serviceId))";
+var accounts = "CREATE TABLE accounts ( id INT AUTO_INCREMENT PRIMARY KEY, login VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE)";
+var cars = "CREATE TABLE cars ( carId INT AUTO_INCREMENT PRIMARY KEY, brand VARCHAR(255) NOT NULL, model VARCHAR(255) NOT NULL, engineType VARCHAR(255) NOT NULL,enginePower VARCHAR(255) NOT NULL,sizeWidth INT NOT NULL,sizeLength INT NOT NULL, caricon VARCHAR(255) NOT NULL)";
+var services = "CREATE TABLE services ( serviceId INT AUTO_INCREMENT PRIMARY KEY, date DATE NOT NULL, title VARCHAR(255) NOT NULL)";
+var mileage = "CREATE TABLE mileage ( mileageId INT PRIMARY KEY AUTO_INCREMENT, date DATE NOT NULL, value INT NOT NULL, distance INT NOT NULL)";
+var accounts_cars = "CREATE TABLE accountsCars ( acId INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), carId INT NOT NULL, FOREIGN KEY (carId) REFERENCES cars(carId))";
+var accounts_mileage = "CREATE TABLE accountsMileage ( id INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), acId INT NOT NULL, FOREIGN KEY (acId) REFERENCES accountscars(acId), mileageId INT NOT NULL, FOREIGN KEY (mileageId) REFERENCES mileage(mileageId))";
+var accounts_services = "CREATE TABLE accountsService ( id INT AUTO_INCREMENT PRIMARY KEY, userId INT NOT NULL, FOREIGN KEY (userId) REFERENCES accounts(id), acId INT NOT NULL, FOREIGN KEY (acId) REFERENCES accountscars(acId), serviceId INT NOT NULL, FOREIGN KEY (serviceId) REFERENCES services(serviceId))";
 
 con.connect(function(err) {
     if (err) throw err;

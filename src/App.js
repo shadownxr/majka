@@ -3,15 +3,6 @@ import './App.css';
 import SignPage from './SignPage';
 import MainPage from './MainPage';
 
-const account = {
-  id: 1,
-  login: "admin",
-  password: "asdf",
-  name: "Admin",
-  surename: "Adminowsky",
-  email: "AAdminowsky@gmail.com",
-}
-
 class App extends React.Component {
   constructor(props){
     super(props)
@@ -22,13 +13,14 @@ class App extends React.Component {
         currentScreen: null,
         loginPage: true,
         account: null,
-        carsData: null
+        carsData: null,
+        isEmpty: false,
     }
   }
 
-  fetchCars(account){
+  fetchCars(){
     let details = {
-      'userId': account
+      'userId': this.state.account[0].id
     };
 
     const options = {
@@ -47,14 +39,8 @@ class App extends React.Component {
     });
   }
 
-  componentDidMount(){
-    /*if(this.state.account != null){
-      this.fetchCars(this.state.account);
-    }*/
-  }
-
-  componentDidUpdate(prevProps){
-    if(this.props.dataCallback !== prevProps.dataCallback){
+  componentDidUpdate(prevProps,prevState){
+    if(this.state.account !== prevState.account){
       this.fetchCars();
     }
   }
@@ -65,16 +51,26 @@ class App extends React.Component {
 
   accountHandle = (account) => {
     this.setState({account: account});
-    console.log(this.state.account);
+  }
+
+  refreshCallbackHandle = (refresh) => {
+    console.log("App callback: "+refresh);
+    console.log(this.state.carsData);
+    if(refresh === true){
+      this.fetchCars();
+    }
   }
 
   render(){
     if(this.state.loginPage === false){
+      if(this.state.carsData === null){
+        return <div/>
+      } else {
       return (
         <div className="App">
-          {/*<MainPage carData={this.state.carsData} account={this.state.account}/>*/}
+          <MainPage carData={this.state.carsData} account={this.state.account[0]} refreshCallback={this.refreshCallbackHandle}/>
         </div>
-      )
+      )}
     } else if(this.state.loginPage === true){
       return (
         <div className="App">

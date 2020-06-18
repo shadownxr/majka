@@ -7,11 +7,11 @@ import DaneTechniczne from './DaneTechniczne';
 
 class MainMenu extends React.Component {
     onSerwisyClicked = () => {
-        this.props.mainMenuChoiceCallback(<Serwisy carData={this.props.carData} />)
+        this.props.mainMenuChoiceCallback(<Serwisy carData={this.props.carData} account={this.props.account}/>)
     }
     
     onSpalanieClicked = () => {
-        this.props.mainMenuChoiceCallback(<Spalanie carData={this.props.carData} />)
+        this.props.mainMenuChoiceCallback(<Spalanie carData={this.props.carData} account={this.props.account}/>)
     }
     
     onDaneTechniczneClicked = () => {

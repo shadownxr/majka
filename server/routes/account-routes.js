@@ -11,19 +11,21 @@ router.post('/accounts/signup', AccountCtrl.signUp);
 router.post('/accounts/signin', AccountCtrl.signIn);
 router.post('/accounts/user', AccountCtrl.changePassword);
 
+router.get('/cars/ac',CarCtrl.getAC);
 router.post('/cars/list',CarCtrl.getCars);
-router.post('/cars/:userId/:carId', CarCtrl.addCar);
-router.delete('/cars/:userId/:carId',CarCtrl.deleteCar);
+router.post('/cars', CarCtrl.addCar);
+router.delete('/cars',CarCtrl.deleteCar);
 
-router.post('/services/:userId/:carId', ServiceCtrl.getServices);
-router.post('/services/:userId/:carId/:date/:title', ServiceCtrl.postServices);
-router.delete('/services/:userId/:carId/:serviceId', ServiceCtrl.deleteServices);
-router.post('/services/:serviceId/:newDate/:newTitle',ServiceCtrl.updateServices);
-router.get('/lastId',ServiceCtrl.getLastInsertedId);
+router.post('/services', ServiceCtrl.getServices);
+router.post('/services/add', ServiceCtrl.postServices);
+router.delete('/services', ServiceCtrl.deleteServices);
+router.post('/services/update',ServiceCtrl.updateServices);
+router.post('/services/search',ServiceCtrl.searchServices);
 
-router.post('/mileage/:userId/:carId', MileageCtrl.getMileage);
-router.post('/mileage/:userId/:carId/:date/:value/:distance', MileageCtrl.postMileage);
-router.delete('/mileage/:userId/:carId/:mileageId', MileageCtrl.deleteMileage);
-router.post('/mileage/:mileageId/:newDate/:newValue/:newDistance', MileageCtrl.updateMileage);
+router.post('/mileage', MileageCtrl.getMileage);
+router.post('/mileage/search', MileageCtrl.searchMileage);
+router.post('/mileage/add', MileageCtrl.postMileage);
+router.delete('/mileage', MileageCtrl.deleteMileage);
+router.post('/mileage/update', MileageCtrl.updateMileage);
 
 module.exports = router;
