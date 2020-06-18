@@ -35,6 +35,7 @@ const useStyles = makeStyles({
 
 const DaneTechniczne = ({ carData }) => (
     <TableContainer component={Paper}>
+      <h1 style={{backgroundColor: 'black',color: 'white',alignItems:'center'}}>DANE TECHNICZNE</h1>
       <Table className={useStyles().table} aria-label="simple table">
         <TableHead>
           <StyledTableRow>

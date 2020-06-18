@@ -35,6 +35,18 @@ exports.addCar = (req, res) => {
     });  
 };
 
+exports.getAC = (req, res) => {
+  Car.getAC((err, data) => {
+    console.log(req.body.userId);
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving cars."
+      });
+    else res.send(data);
+  });  
+};
+
 exports.deleteCar = (req, res) => {
     Car.deleteUserCar(req.body.userId, req.body.carId, (err, data) => {
         if (err) {

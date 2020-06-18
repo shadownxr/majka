@@ -9,9 +9,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import EditButton from './EditButtonSerwisy';
+import DeleteButton from './DeleteButtonSerwisy';
 import Button from '@material-ui/core/Button';
 import SearchButton from './SearchButtonSerwisy';
+import Moment from 'moment';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -31,22 +32,25 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
+let archiveServiceSearched;
+
 class Serwisy extends React.Component {
     constructor(props){
         super(props)
         this.state = {
             isLoading: true,
             archive: false,
-            services: [{date: "Cos",title:"cos"}],
             account: this.props.account,
-            services: this.props.carData
+            services: this.props.carData,
+            search: false,
+            searchServices: []
         }
     }
 
     fetchServices(){
         let details = {
             'userId': this.props.account.id,
-            'carId': this.props.carData.id
+            'carId': this.props.carData.acId
           };
       
           const options = {
@@ -61,7 +65,7 @@ class Serwisy extends React.Component {
           .then(response => response.json())
           .then(result => {
             console.log(result);
-            this.setState({services: result});
+            this.setState({services: result, searchServices: result});
           });
     }
 
@@ -83,30 +87,76 @@ class Serwisy extends React.Component {
         this.setState({archive: false})
     }
 
+    refreshCallbackHandle = (refresh) => {
+        console.log("Refresh: "+refresh);
+        if(refresh === true){
+            this.fetchServices();
+        }
+    }
+
+    handleSearchCallback = (callback) => {
+        this.setState({searchServices:callback.data,search:callback.search});
+    }    
+
     render(){
-        /*const archiveServiceList = this.state.services.map((service,i) =>
-        <StyledTableRow key={i} className = "serviceList">
-            <StyledTableCell>{new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric',year: 'numeric', month: 'numeric', day: 'numeric'}).format(service.date)}</StyledTableCell>
-            <StyledTableCell align="right">{service.title}</StyledTableCell>
-            <StyledTableCell align="center"><EditButton/></StyledTableCell>
-        </StyledTableRow>
-        )*/
 
         var data = Array.from(this.state.services);
         console.log(data);
-        const serviceList = data.map((service,i) => {
+        console.log(this.props.carData.acId);
+        const serviceList = data
+        .filter((list) => {
+            return(
+                (new Date(list.date) <= new Date())
+                &&
+                (new Date(list.date) >= Moment(new Date()).subtract(1,'month'))
+                )
+        })
+        .sort((a,b) => {return(new Date(a.date) - new Date(b.date))}).reverse().map((service,i) => {
             return (
             <StyledTableRow key={i} className = "serviceList">
-                <StyledTableCell>{(new Date(service.date)).toString()}</StyledTableCell>
+                <StyledTableCell>{(new Date(service.date)).toLocaleDateString()}</StyledTableCell>
                 <StyledTableCell align="right">{service.title}</StyledTableCell>
-                <StyledTableCell align="center"><EditButton/></StyledTableCell>
+                <StyledTableCell align="center"><DeleteButton serviceId = {service.serviceId} refreshCallback = {this.refreshCallbackHandle}/></StyledTableCell>
+            </StyledTableRow>
+            )}
+        )
+
+        const newServiceList = data.filter((list) => {return( new Date(list.date) > new Date())}).sort((a,b) => {return(new Date(a.date) - new Date(b.date))}).map((service,i) => {
+            return (
+            <StyledTableRow key={i} className = "serviceList">
+                <StyledTableCell>{(new Date(service.date)).toLocaleDateString()}</StyledTableCell>
+                <StyledTableCell align="right">{service.title}</StyledTableCell>
+                <StyledTableCell align="center"><DeleteButton serviceId = {service.serviceId} refreshCallback = {this.refreshCallbackHandle}/></StyledTableCell>
+            </StyledTableRow>
+            )}
+        )
+
+        let archiveServiceList = data.filter((list) => {return( new Date(list.date) <= new Date())}).sort((a,b) => {return(new Date(a.date) - new Date(b.date))}).reverse().map((service,i) => {
+            return (
+            <StyledTableRow key={i} className = "serviceList">
+                <StyledTableCell>{(new Date(service.date)).toLocaleDateString()}</StyledTableCell>
+                <StyledTableCell align="right">{service.title}</StyledTableCell>
+                <StyledTableCell align="center"><DeleteButton serviceId = {service.serviceId} refreshCallback = {this.refreshCallbackHandle}/></StyledTableCell>
+            </StyledTableRow>
+            )}
+        )
+
+        var archive = Array.from(this.state.searchServices);
+        let archiveSearchServiceList = archive.filter((list) => {return( new Date(list.date) <= new Date())}).sort((a,b) => {return(new Date(a.date) - new Date(b.date))}).reverse().map((service,i) => {
+            return (
+            <StyledTableRow key={i} className = "serviceList">
+                <StyledTableCell>{(new Date(service.date)).toLocaleDateString()}</StyledTableCell>
+                <StyledTableCell align="right">{service.title}</StyledTableCell>
+                <StyledTableCell align="center"><DeleteButton serviceId = {service.serviceId} refreshCallback = {this.refreshCallbackHandle}/></StyledTableCell>
             </StyledTableRow>
             )}
         )
 
         if(this.state.archive === false){
             return(
+            <div>
                 <TableContainer className="Serwisy" component={Paper}>
+                <h1 style={{backgroundColor: 'black',color: 'white',alignItems:'center', width: '100%'}}>SERWISY</h1>
                     <Table className="SerwisyTable" aria-label="simple table">
                     <TableHead>
                         <StyledTableRow>
@@ -117,9 +167,9 @@ class Serwisy extends React.Component {
                         <StyledTableRow>
                                 <StyledTableCell>Data</StyledTableCell>
                                 <StyledTableCell align="right">Tytuł</StyledTableCell>
-                                <StyledTableCell align="center"><AddButton/></StyledTableCell>
+                                <StyledTableCell align="center"><AddButton account={this.props.account} carData={this.props.carData} refreshCallback={this.refreshCallbackHandle}/></StyledTableCell>
                         </StyledTableRow>
-
+                        {newServiceList}
                     </TableBody>
                     <TableHead>
                         <StyledTableRow>
@@ -130,7 +180,7 @@ class Serwisy extends React.Component {
                         <StyledTableRow>
                             <StyledTableCell>Data</StyledTableCell>
                             <StyledTableCell align="right">Tytuł</StyledTableCell>
-                            <StyledTableCell align="center"><AddButton/></StyledTableCell>
+                            <StyledTableCell align="center"><AddButton account={this.props.account} carData={this.props.carData} refreshCallback={this.refreshCallbackHandle}/></StyledTableCell>
                         </StyledTableRow>
                         {serviceList}
                         <StyledTableRow>
@@ -139,30 +189,33 @@ class Serwisy extends React.Component {
                     </TableBody>
                     </Table>
                 </TableContainer>
+            </div>
             )
         } else if (this.state.archive === true){
             return(
+            <div>
                 <TableContainer className="Serwisy" component={Paper}>
                     <Table className="SerwisyTable" aria-label="simple table">
-                    <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell align="center" colSpan={2}>Wszystkie Serwisy</StyledTableCell>
-                            <StyledTableCell align="center"><SearchButton /></StyledTableCell>
-                        </StyledTableRow>
-                    </TableHead>
-                    <TableBody>
-                        <StyledTableRow>
-                            <StyledTableCell>Data</StyledTableCell>
-                            <StyledTableCell align="right">Tytuł</StyledTableCell>
-                            <StyledTableCell align="center"><AddButton/></StyledTableCell>
-                        </StyledTableRow>
-                        {/*archiveServiceList*/}
-                        <StyledTableRow>
-                            <StyledTableCell align="center" colSpan={3}><Button onClick = {this.onBackClicked}>Powrót</Button></StyledTableCell>
-                        </StyledTableRow>
-                    </TableBody>
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell align="center" colSpan={2}>Wszystkie Serwisy</StyledTableCell>
+                                <StyledTableCell align="center"><SearchButton searchResultCallback={this.handleSearchCallback} account={this.props.account} carData={this.props.carData}/></StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                            <StyledTableRow>
+                                <StyledTableCell>Data</StyledTableCell>
+                                <StyledTableCell align="right">Tytuł</StyledTableCell>
+                                <StyledTableCell align="center"></StyledTableCell>
+                            </StyledTableRow>
+                            {(this.state.search === false)?archiveServiceList:archiveSearchServiceList}
+                            <StyledTableRow>
+                                <StyledTableCell align="center" colSpan={3}><Button onClick = {this.onBackClicked}>Powrót</Button></StyledTableCell>
+                            </StyledTableRow>
+                        </TableBody>
                     </Table>
                 </TableContainer>
+            </div>
             )
         }
     }

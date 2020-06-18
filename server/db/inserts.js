@@ -47,7 +47,7 @@ var valuesAccountsCars = [
     [1,3]
 ];
 
-var accountsMileage = "INSERT INTO accountsmileage (userId,carId,mileageId) VALUES ?";
+var accountsMileage = "INSERT INTO accountsmileage (userId,acId,mileageId) VALUES ?";
 var valuesAccountsMileage = [
     [1,1,1],
     [1,1,2],
@@ -60,7 +60,7 @@ var valuesAccountsMileage = [
     [1,3,9]
 ];
 
-var accountsService = "INSERT INTO accountsservice (userId,carId,serviceId) VALUES ?";
+var accountsService = "INSERT INTO accountsservice (userId,acId,serviceId) VALUES ?";
 var valuesAccountsService = [
     [1,1,1],
     [1,1,2],
@@ -71,6 +71,8 @@ var valuesAccountsService = [
 ];
 
 var trigger1 = "create trigger add_dummy_car AFTER INSERT ON accounts FOR EACH ROW INSERT INTO accountscars SET userId = New.id, carId = 1";
+var trigger2 = "CREATE TRIGGER del_on_serv_del BEFORE DELETE ON services FOR EACH ROW DELETE FROM accountsservice WHERE serviceId = old.serviceId;";
+var trigger3 = "CREATE TRIGGER del_on_mile_del BEFORE DELETE ON mileage FOR EACH ROW DELETE FROM accountsmileage WHERE mileageId = old.mileageId;";
 
 con.connect(function(err) {
     if (err) throw err;
@@ -106,5 +108,13 @@ con.connect(function(err) {
     con.query(trigger1, function (err, result) {
         if (err) throw err;
         console.log("Trigger 1 created");
+    });
+    con.query(trigger2, function (err, result) {
+        if (err) throw err;
+        console.log("Trigger 2 created");
+    });
+    con.query(trigger3, function (err, result) {
+        if (err) throw err;
+        console.log("Trigger 3 created");
     });
 });

@@ -5,13 +5,13 @@ import MyButton from './MyButton';
 import Box from '@material-ui/core/Box';
 
 class Profile extends React.Component {
-    constructor(){
-        super()
-        this.onProfileClicked = this.onProfileClicked.bind(this);
+
+    onProfileClicked = () =>{
+        this.props.profileChoiceCallback(<ProfileData account = {this.props.account}/>);
     }
 
-    onProfileClicked(){
-        this.props.profileChoiceCallback(<ProfileData accountData = {this.props.accountData}/>);
+    onLogoutClicked = () => {
+        window.location.reload(false);
     }
 
     render(){
@@ -22,9 +22,9 @@ class Profile extends React.Component {
                 </div>
                 <div style={{flex:2}}>
                     <Box component="div" display="inline" width="100%" alignItems="center" justifyContent="center">
-                        {this.props.accountData.name+" "+this.props.accountData.surename}
+                        {this.props.account.name}
                         <MyButton onClick = {this.onProfileClicked} width="auto">Profile</MyButton>
-                        <MyButton width="auto">Logout</MyButton>
+                        <MyButton width="auto" onClick = {this.onLogoutClicked}>Logout</MyButton>
                     </Box>
                 </div>
             </div>

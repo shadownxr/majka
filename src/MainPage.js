@@ -21,15 +21,19 @@ class MainPage extends React.Component {
   
     componentDidMount(){
         this.setState({
-          currentScreen: <DaneTechniczne carData={this.state.carsData[this.state.activeCarId-1]} />
+          currentScreen: <DaneTechniczne carData={this.state.carsData[this.state.activeCarId-1]} />,
         })
     }
   
     componentDidUpdate(prevProps, prevState) {
       if (prevState.activeCarId !== this.state.activeCarId) {
         this.setState({
-          currentScreen: <DaneTechniczne carData={this.state.carsData[this.state.activeCarId-1]} />
+          currentScreen: <DaneTechniczne carData={this.state.carsData[this.state.activeCarId-1]} />,
+          activeCarId: this.state.carsData[this.state.activeCarId-1].acId
         })
+      }
+      if (this.props.carsData !== prevProps.carsData){
+        this.setState({carsData: this.props.carData});
       }
     }
   
@@ -46,16 +50,17 @@ class MainPage extends React.Component {
     }
   
     refreshCallbackHandle = (refresh) => {
+      console.log("Main Page callback: "+refresh);
       this.props.refreshCallback(refresh);
     }
 
     render(){
         return (
           <div className="MainPage">
-              <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={this.state.carsData[this.state.activeCarId-1]} account={this.state.account}/>
+              <MainMenu mainMenuChoiceCallback = {this.mainMenuCallback} carData={this.props.carData[this.state.activeCarId-1]} account={this.state.account}/>
               <Content currentScreen = {this.state.currentScreen} />
-              <Profile accountData = {this.state.account} image={null} profileChoiceCallback = {this.profileCallback} />
-              <CarMenu onCarClick = {this.handleCarClick} carsData = {this.state.carsData} account={this.state.account} refreshCallback = {this.refreshCallbackHandle}/>
+              <Profile account = {this.state.account} image={null} profileChoiceCallback = {this.profileCallback} />
+              <CarMenu onCarClick = {this.handleCarClick} carsData = {this.props.carData} account={this.state.account} refreshCallback = {this.refreshCallbackHandle} activeCarId = {this.state.activeCarId}/>
           </div>
         )
     }

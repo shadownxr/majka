@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,9 +18,8 @@ const MyButton = styled(Button)({
 });
 
 
-export default function EditButton(){
+export default function DeleteButton(props){
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,43 +29,44 @@ export default function EditButton(){
     setOpen(false);
   };
 
+  const handleDelete = () => {
+    let details = {
+      'serviceId': props.serviceId
+    };
+
+    const options = {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(details),
+    };
+
+    const url = 'http://localhost:8000/services';
+
+    fetch(url, options)
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+      props.refreshCallback(true);
+      handleClose();
+    });
+  }
+
   return (
    <div>
-     <MyButton color="primary" onClick={handleClickOpen}><Edit style={{height:'35px',width:'35px'}}/></MyButton>
+     <MyButton color="primary" onClick={handleClickOpen}><Delete style={{height:'35px',width:'35px'}}/></MyButton>
      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Edycja</DialogTitle>
+          <DialogTitle id="form-dialog-title">Usuń</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Edytuj wpis
+              Czy jesteś pewny usunięcia wpisu?
             </DialogContentText>
-            <TextField
-              id="date"
-              label="Data"
-              type="date"
-              value={date}
-              onChange={(event, newDate) => {
-                setDate(newDate);
-                console.log(date);
-              }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Tytuł"
-              type="text"
-              fullWidth
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Anuluj
             </Button>
-            <Button onClick={handleClose} color="primary">
-              Dodaj
+            <Button onClick={handleDelete} color="primary">
+              Usuń
             </Button>
           </DialogActions>
         </Dialog>

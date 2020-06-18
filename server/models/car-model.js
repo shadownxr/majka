@@ -18,7 +18,7 @@ const Car = function(car) {
 };
 
 Car.getCarsByUserId = ( id, result) => {
-    connection.query("SELECT * FROM accountscars JOIN cars ON accountscars.carId = cars.id WHERE userId = ?", [id] ,(err,res) => {
+    connection.query("SELECT * FROM accountscars a INNER JOIN cars c ON a.carId = c.carId WHERE userId = ?", [id] ,(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);
@@ -33,6 +33,24 @@ Car.getCarsByUserId = ( id, result) => {
 
         result({ kind: "not_found" }, false);
     });
+};
+
+Car.getAC = result => {
+  connection.query("SELECT * FROM accountscars",(err,res) => {
+      if(err){
+          console.log("error: ", err);
+          result(err, false);
+          return;
+      }
+
+      if (res.length) {
+          console.log("Cars found:",res);
+          result(null, res);
+          return;
+      }
+
+      result({ kind: "not_found" }, false);
+  });
 };
 
 Car.addCarToUser = ( userId, carId, result) => {

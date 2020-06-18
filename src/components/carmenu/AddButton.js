@@ -23,9 +23,7 @@ export default function AddButton(props){
   const [open, setOpen] = useState(false);
   const [carBrand, setCarBrand] = useState(" ");
   const [carModel, setCarModel] = useState(" ");
-  const [carEngine, setCarEngine] = useState(" ");
   const [carId, setCarId] = useState(0);
-  const [refresh, setRefresh] = useState(false);
 
   const addCarToUser = () => {
     let details = {
@@ -45,9 +43,7 @@ export default function AddButton(props){
     .then(response => response.json())
     .then(result => {
       //console.log(result);
-        setRefresh(true);
-        props.refreshCallback(refresh);
-        setRefresh(false);
+        props.refreshCallback(true);
     });
   }
 
@@ -96,15 +92,6 @@ export default function AddButton(props){
               style={{ width: 300 , margin: "5px"}}
               renderInput={(params) => <TextField {...params} label="Model" variant="outlined" />}
             />
-            <Autocomplete
-              id="engine-box"
-              disableClearable
-              onChange={(event,newEngine)=>{setCarEngine(newEngine.label)}}
-              options={(carBrand && carModel)?(engine.filter(car => car.id === carModel)):[]}
-              getOptionLabel={(option) => option.label}
-              style={{ width: 300 , margin: "5px"}}
-              renderInput={(params) => <TextField {...params} label="Silnik" variant="outlined" />}
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -131,12 +118,4 @@ const model = [{
   id: "Porsche", label: "Carrera GT",
 },{
   id: "Ford", label: "Mustang VII",
-}]
-
-const engine = [{
-  id: "911 (992)", label: "Porsche 1"
-},{
-  id: "Carrera GT", label: "Porsche 2"
-},{
-  id: "Mustang VII", label: "Mustang 1"
 }]

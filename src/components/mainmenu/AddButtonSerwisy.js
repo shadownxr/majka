@@ -18,16 +18,62 @@ const MyButton = styled(Button)({
 });
 
 
-export default function AddButton(){
+export default function AddButton(props){
     const [open, setOpen] = React.useState(false);
     const [date, setDate] = React.useState('');
+    const [title, setTitle] = React.useState('');
+    const [err, setErr] = React.useState('');
 
     const handleClickOpen = () => {
       setOpen(true);
     };
 
     const handleClose = () => {
+      setErr("");
       setOpen(false);
+    };
+
+    const handleTitle = (event) => {
+      setTitle(event.target.value);
+    };
+
+    const handleAdd = () => {
+      addServicesHandle();
+    };
+
+    const handleDate = (event) => {
+      setDate(event.target.value);
+    };
+
+    const addServicesHandle = () => {
+      if((date === "") || (title === "")){
+        setErr("Wypełnij wszystkie pola");
+        return;
+      }
+
+      let details = {
+          'date': date,
+          'title':  title,
+          'userId': props.account.id,
+          'carId': props.carData.acId
+        };
+    
+        const options = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(details),
+        };
+    
+        const url = 'http://localhost:8000/services/add';
+    
+        fetch(url, options)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          props.refreshCallback(true);
+          setErr("");
+          handleClose();
+        });
     };
 
     return (
@@ -37,17 +83,20 @@ export default function AddButton(){
         <DialogTitle id="form-dialog-title">Dodaj Serwis</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Podaj date i tytuł
+            Podaj date i tytuł<br/>
+            {err}
           </DialogContentText>
           <TextField
               id="date"
               label="Data"
               type="date"
               value={date}
-              onChange={(event, newDate) => {
+              onChange={/*(event, newDate) => {
                 setDate(newDate);
                 console.log(date);
-              }}
+              }*/
+              handleDate
+              }
               InputLabelProps={{
                 shrink: true,
               }}
@@ -59,13 +108,14 @@ export default function AddButton(){
             label="Tytuł"
             type="text"
             fullWidth
+            onChange={handleTitle}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Anuluj
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleAdd} color="primary">
             Dodaj
           </Button>
         </DialogActions>

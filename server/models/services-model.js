@@ -7,6 +7,13 @@ const connection = mysql.createConnection({
   database: "majka"
 });
 
+var pool  = mysql.createPool({
+    host     : 'localhost',
+    user     : 'root',
+    password : '12345',
+    database : 'majka'
+});
+
 connection.connect(error => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
@@ -18,7 +25,7 @@ const Services = function(services) {
 };
 
 Services.getServicesById = ( userId, carId, result) => {
-    connection.query("SELECT * FROM accountsservice JOIN services ON accountsservice.serviceId = services.serviceId WHERE userId = ? AND carId = ?", [userId,carId] ,(err,res) => {
+    connection.query("SELECT * FROM accountsservice JOIN services ON accountsservice.serviceId = services.serviceId WHERE userId = ? AND acId = ?", [userId,carId] ,(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);
@@ -35,16 +42,34 @@ Services.getServicesById = ( userId, carId, result) => {
     });
 };
 
-Services.addService = (newService, result) => {
-    connection.query("INSERT INTO service SET ?", newService ,(err,res) => {
-        if(err){
-            console.log("error: ", err);
-            result(err, false);
-            return;
-        }
-
-        console.log("Service created ");
-        result(null,true);
+Services.addService = (newService,carId,userId, result) => {
+    pool.getConnection((err, con) => {
+    if(err){
+        console.log("error: ", err);
+        con.release();
+        result(err, false);
+        return;
+    }
+        con.query(`INSERT INTO services SET ?`, newService ,(err,res) => {
+            if(err){
+                console.log("error: ", err);
+                con.release();
+                result(err, false);
+                return;
+            } else {
+                con.query(`INSERT INTO accountsservice (userId,acId,serviceId) VALUES (${userId},${carId},LAST_INSERT_ID())`, (err,res) => {
+                    con.release();
+                    if(err){
+                        console.log("error: ", err);
+                        result(err, false);
+                        return;
+                    }
+                    console.log("Service created ");
+                    result(null,true);
+                    return;
+                });
+            }
+        });
     });
 }
 
@@ -67,7 +92,7 @@ Services.getLastId = result => {
 }
 
 Services.addServiceInAS = (userId,carId,serviceId,result) => {
-    connection.query("INSERT INTO accountsservice SET userId = ?, carId = ?, serviceId = ?", [userId,carId,serviceId] ,(err,res) => {
+    connection.query("INSERT INTO accountsservice SET userId = ?, acId = ?, serviceId = ?", [userId,carId,serviceId] ,(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);
@@ -132,5 +157,59 @@ Services.updateService = (serviceId,newTitle,newDate,result) => {
         result(null, { serviceId: serviceId, title: newTitle, date: newDate });
     })
 }
+
+Services.searchServicesFromTo = ( userId, carId, dateFrom, dateTo,result) => {
+    connection.query("SELECT * FROM accountsservice a JOIN services s ON a.serviceId = s.serviceId WHERE a.userId = ? AND a.acId = ? AND s.date >= ? AND s.date <= ?", [userId,carId,dateFrom,dateTo] ,(err,res) => {
+        if(err){
+            console.log("error: ", err);
+            result(err, false);
+            return;
+        }
+
+        if (res.length) {
+            console.log("Services:",res);
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "not_found" }, false);
+    });
+};
+
+Services.searchServicesTitle = ( userId, carId, title, result) => {
+    connection.query("SELECT * FROM accountsservice a JOIN services s ON a.serviceId = s.serviceId WHERE a.userId = ? AND a.acId = ? AND s.title = ?", [userId,carId,title] ,(err,res) => {
+        if(err){
+            console.log("error: ", err);
+            result(err, false);
+            return;
+        }
+
+        if (res.length) {
+            console.log("Services:",res);
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "not_found" }, false);
+    });
+};
+
+Services.searchServicesFromToTitle = ( userId, carId, dateFrom, dateTo,title,result) => {
+    connection.query("SELECT * FROM accountsservice a JOIN services s ON a.serviceId = s.serviceId WHERE a.userId = ? AND a.acId = ? AND s.date >= ? AND s.date <= ? AND title = ?", [userId,carId,dateFrom,dateTo,title] ,(err,res) => {
+        if(err){
+            console.log("error: ", err);
+            result(err, false);
+            return;
+        }
+
+        if (res.length) {
+            console.log("Services:",res);
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "not_found" }, false);
+    });
+};
 
 module.exports = Services;

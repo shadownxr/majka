@@ -7,6 +7,13 @@ const connection = mysql.createConnection({
   database: "majka"
 });
 
+var pool  = mysql.createPool({
+    host     : 'localhost',
+    user     : 'root',
+    password : '12345',
+    database : 'majka'
+});
+
 connection.connect(error => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
@@ -18,8 +25,8 @@ const Mileage = function(mileage) {
     this.distance = mileage.distance;
 };
   
-Mileage.getMileageById = ( userId, carId, result) => {
-    connection.query("SELECT * FROM accountsmileage JOIN mileage ON accountsmileage.mileageId = mileage.mileageId WHERE userId = ? AND carId = ?", [userId,carId] ,(err,res) => {
+Mileage.getMileage = ( userId, carId, result) => {
+    connection.query("SELECT * FROM accountsmileage JOIN mileage ON accountsmileage.mileageId = mileage.mileageId WHERE userId = ? AND acId = ?", [userId,carId] ,(err,res) => {
         if(err){
             console.log("error: ", err);
             result(err, false);
@@ -34,18 +41,35 @@ Mileage.getMileageById = ( userId, carId, result) => {
 
         result({ kind: "not_found" }, false);
     });
-};
+}
 
-Mileage.addMileage = (newMileage, result) => {
-    connection.query("INSERT INTO mileage SET ?", newMileage ,(err,res) => {
+Mileage.addMileage = (newMileage, carId, userId, result) => {
+    pool.getConnection((err, con) => {
         if(err){
             console.log("error: ", err);
+            con.release();
             result(err, false);
             return;
         }
-
-        console.log("Mileage created ");
-        result(null,true);
+            con.query("INSERT INTO mileage SET ?", newMileage ,(err,res) => {
+                if(err){
+                    console.log("error: ", err);
+                    result(err, false);
+                    return;
+                } else {
+                con.query(`INSERT INTO accountsmileage (userId,acId,mileageId) VALUES (${userId},${carId},LAST_INSERT_ID())`, (err,res) => {
+                    con.release();
+                    if(err){
+                        console.log("error: ", err);
+                        result(err, false);
+                        return;
+                    }
+                    console.log("Mileage created ");
+                    result(null,true);
+                    return;
+                });
+            }
+        });
     });
 }
 
@@ -115,5 +139,23 @@ Mileage.upMileage = (mileageId,newDate,newValue,newDistance,result) => {
         result(null, { mileageId: mileageId, value: newValue, distance: newDistance, date: newDate });
     })
 }
+
+Mileage.searchMileageFromTo = ( userId, carId, dateFrom, dateTo, result) => {
+    connection.query("SELECT * FROM accountsmileage a JOIN mileage m ON a.mileageId = m.mileageId WHERE a.userId = ? AND a.acId = ? AND m.date >= ? AND m.date <= ?", [userId,carId,dateFrom,dateTo] ,(err,res) => {
+        if(err){
+            console.log("error: ", err);
+            result(err, false);
+            return;
+        }
+
+        if (res.length) {
+            console.log("Mileage:",res);
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "not_found" }, false);
+    });
+};
   
 module.exports = Mileage;

@@ -34,7 +34,7 @@ class App extends React.Component {
     fetch(url, options)
     .then(response => response.json())
     .then(result => {
-      //console.log(result);
+      console.log(result);
       this.setState({carsData: result});
     });
   }
@@ -54,6 +54,8 @@ class App extends React.Component {
   }
 
   refreshCallbackHandle = (refresh) => {
+    console.log("App callback: "+refresh);
+    console.log(this.state.carsData);
     if(refresh === true){
       this.fetchCars();
     }

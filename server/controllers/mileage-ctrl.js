@@ -1,4 +1,4 @@
-const Mileage = require("../models/services-model.js");
+const Mileage = require("../models/mileage-model.js");
 
 exports.getMileage = (req, res) => {
     if (!req.body) {
@@ -7,7 +7,7 @@ exports.getMileage = (req, res) => {
         });
     }
 
-    Mileage.getMileageById( req.body.id, (err, data) => {
+    Mileage.getMileage( req.body.userId, req.body.carId, (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -30,36 +30,17 @@ exports.postMileage = (req, res) => {
         distance : req.body.distance
     });
 
-    Mileage.addMileage( mileage, (err, data) => {
-        if (err)
-              res.status(500).send({
-                message:
-                  err.message || "Error during adding Mileage."
-            }); else
-            Mileage.addMileageInAM( req.body.userId, req.body.carId, req.body.mileageId, (err, data) => {
-            if (err)
-              res.status(500).send({
-                message:
-                  err.message || "Error during adding Mileage to AM."
-              });
-            else res.send(data);
-        });
-    });
+    Mileage.addMileage( mileage, req.body.carId, req.body.userId, (err, data) => {
+      if (err)
+            res.status(500).send({
+              message:
+                err.message || "Error during adding Mileage."
+          }); else res.send(data);
+      });
 }
 
 exports.deleteMileage = (req, res) => {
-    Mileage.deleteMileageInAM(req.body.mileageId, req.body.userId, req.body.carId, (err, data) => {
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `Not found User with id ${req.body.userId} and Mileage with id ${req.body.mileageId}.`
-            });
-          } else {
-            res.status(500).send({
-              message: "Could not delete User with id " + req.body.userId + "and Mileage with id" + req.body.mileageId
-            });
-          }
-        } else Mileage.delMileage(req.body.mileageId, (err, data) => {
+    Mileage.deleteMileage(req.body.mileageId, (err, data) => {
             if (err) {
               if (err.kind === "not_found") {
                 res.status(404).send({
@@ -72,8 +53,8 @@ exports.deleteMileage = (req, res) => {
               }
             } else res.send({ message: `Mileage was deleted successfully!` });
       });
-    }); 
-}
+}; 
+
 
 exports.updateMileage = (req, res) => {
     if (!req.body) {
@@ -96,4 +77,21 @@ exports.updateMileage = (req, res) => {
           } else res.send(data);
         }
       );
+}
+
+exports.searchMileage = (req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+  }
+
+  Mileage.searchMileageFromTo( req.body.userId, req.body.carId, req.body.dateFrom, req.body.dateTo,(err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving car mileage."
+      });
+    else res.send(data);
+  });
 }
